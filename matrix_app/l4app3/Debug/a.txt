@@ -1,0 +1,37 @@
+
+app.elf:     file format elf32-littlearm
+
+
+Disassembly of section .text:
+
+50000000 <_start>:
+50000000:	e59f0028 	ldr	r0, [pc, #40]	; 50000030 <_start+0x30>
+50000004:	e1a0d000 	mov	sp, r0
+50000008:	e3a00000 	mov	r0, #0
+5000000c:	e59f1020 	ldr	r1, [pc, #32]	; 50000034 <_start+0x34>
+50000010:	e59f2020 	ldr	r2, [pc, #32]	; 50000038 <_start+0x38>
+50000014:	e1510002 	cmp	r1, r2
+50000018:	34810004 	strcc	r0, [r1], #4
+5000001c:	3afffffc 	bcc	50000014 <_start+0x14>
+50000020:	f57ff04f 	dsb	sy
+50000024:	e59fa010 	ldr	sl, [pc, #16]	; 5000003c <_start+0x3c>
+50000028:	e1a0e00f 	mov	lr, pc
+5000002c:	e12fff1a 	bx	sl
+50000030:	50002070 	.word	0x50002070
+50000034:	50000070 	.word	0x50000070
+50000038:	50000070 	.word	0x50000070
+5000003c:	50000040 	.word	0x50000040
+
+50000040 <l_main>:
+50000040:	e52db004 	push	{fp}		; (str fp, [sp, #-4]!)
+50000044:	e28db000 	add	fp, sp, #0
+50000048:	e24dd00c 	sub	sp, sp, #12
+5000004c:	e3a0300a 	mov	r3, #10
+50000050:	e50b3008 	str	r3, [fp, #-8]
+50000054:	e1a00000 	nop			; (mov r0, r0)
+50000058:	e51b3008 	ldr	r3, [fp, #-8]
+5000005c:	e2432001 	sub	r2, r3, #1
+50000060:	e50b2008 	str	r2, [fp, #-8]
+50000064:	e3530000 	cmp	r3, #0
+50000068:	1afffffa 	bne	50000058 <l_main+0x18>
+5000006c:	eafffff6 	b	5000004c <l_main+0xc>

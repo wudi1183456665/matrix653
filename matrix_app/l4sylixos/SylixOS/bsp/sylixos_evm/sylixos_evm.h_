@@ -1,0 +1,90 @@
+/*********************************************************************************************************
+**
+**                                    中国软件开源组织
+**
+**                                   嵌入式实时操作系统
+**
+**                                SylixOS(TM)  LW : long wing
+**
+**                               Copyright All Rights Reserved
+**
+**--------------文件信息--------------------------------------------------------------------------------
+**
+** 文   件   名: imx6q_sylixos.h
+**
+** 创   建   人: acoinfo (翼辉)
+**
+** 文件创建日期: 2016年2月23日
+**
+** 描        述: 适配 SylixOS 官方开发板的 BSP 文件头文件
+*********************************************************************************************************/
+#ifndef IMX6Q_SYLIXOS_H_
+#define IMX6Q_SYLIXOS_H_
+/*********************************************************************************************************
+  名字配置
+*********************************************************************************************************/
+#define BSP_CFG_PLATFORM_NAME               "SylixOS EVM"
+#define BSP_CFG_PLATFORM_VERSION            "BSP version 1.0.1"
+
+/*********************************************************************************************************
+  ROM RAM 相关配置
+  Warning: virtual address is same with physical address in DMA area.
+*********************************************************************************************************/
+#define BSP_CFG_ROM_BASE                    0x00000000
+#define BSP_CFG_ROM_SIZE                    (8 * 1024)
+
+#define BSP_CFG_RAM_RSV_SIZE                (8 * LW_CFG_MB_SIZE)
+#define BSP_CFG_RAM_BASE                    (0x10000000)
+#define BSP_CFG_RAM_SIZE                    (1 * 1024 * 1024 * 1024)
+
+#define BSP_CFG_TEXT_SIZE                   (6   * 1024 * 1024)
+#define BSP_CFG_DATA_SIZE                   (64  * 1024 * 1024)
+#define BSP_CFG_DMA_SIZE                    (192 * 1024 * 1024)
+#define BSP_CFG_APP_SIZE                    (BSP_CFG_RAM_SIZE  - BSP_CFG_TEXT_SIZE - \
+                                             BSP_CFG_DATA_SIZE - BSP_CFG_DMA_SIZE - BSP_CFG_RAM_RSV_SIZE)
+
+#define BSP_CFG_BOOT_STACK_SIZE             (4 * 128 * 1024)
+
+#define BSP_CFG_RAM_RSV_ADDR                (BSP_CFG_RAM_BASE + BSP_CFG_TEXT_SIZE + \
+                                             BSP_CFG_DATA_SIZE + BSP_CFG_DMA_SIZE)
+/*********************************************************************************************************
+  虚拟内存空间 相关配置
+  Physical:
+  -------------------------------------------------------
+  |  TEXT  |  DATA   |   DMA   |   RESERVED   |   APP   |
+  -------------------------------------------------------
+  Virtual:                     |                                                   4GB
+  -----------------------------------------------------------------------------------
+  |                            |        VAPP           | DMA size   |   VIO 128MB   |
+  -----------------------------------------------------------------------------------
+  Warning:
+      1. DMA should NOT overlap with VAPP.
+      2. VAPP should NOT overlap with VIO.
+*********************************************************************************************************/
+#define BSP_CFG_VAPP_START                  (BSP_CFG_RAM_BASE + BSP_CFG_TEXT_SIZE   \
+                                                              + BSP_CFG_DATA_SIZE   \
+                                                              + BSP_CFG_DMA_SIZE    \
+                                                              + BSP_CFG_RAM_RSV_SIZE)
+#define BSP_CFG_VAPP_SIZE                   (3UL * LW_CFG_GB_SIZE - 128 * LW_CFG_MB_SIZE - BSP_CFG_DMA_SIZE)
+
+#define BSP_CFG_VIO_START                   0xF0001000
+#define BSP_CFG_VIO_SIZE                    (64  * LW_CFG_MB_SIZE)
+
+/*********************************************************************************************************
+  目标电路板使用相关宏定义
+*********************************************************************************************************/
+#define BSP_DBG_MSG_PORT                    1                           /* DebugMsg 函数使用的串口      */
+#define BSP_CFG_STD_FILE                    "/dev/ttyS0"                /* shell 使用的串口             */
+
+#define BSP_ERRATA_STABLE_EN                0                           /* 0 - Stable; 1 - Performance  */
+
+#define BSP_CFG_CLOSE_FB_EN                 1                           /* 关闭FB设备时是否关闭显示     */
+
+#define RTC_IMX6Q_INSIDE                    0                           /* 是否使用I.MX6Q 自身的RTC     */
+#define BSP_CFG_YAFFS_EN                    0                           /* 是否启用Yaffs文件系统分区    */
+#define BSP_CFG_CAN_EN                      1                           /* 是否启用CAN                  */
+#define BOARD_CFG_HDMI_EN                   1                           /* 是否启用HDMI                 */
+#endif                                                                  /* IMX6Q_SYLIXOS_H_             */
+/*********************************************************************************************************
+  END
+*********************************************************************************************************/

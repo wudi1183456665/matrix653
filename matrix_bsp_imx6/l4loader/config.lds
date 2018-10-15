@@ -1,0 +1,5 @@
+MEMORY
+{
+  RAM (rwx) : ORIGIN = (0x10000000), LENGTH = (1 * 1024 * 1024 * 1024)
+}
+BOOT_STACK_SIZE = (32 * 1024);

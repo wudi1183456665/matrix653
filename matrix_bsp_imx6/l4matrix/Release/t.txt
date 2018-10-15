@@ -1,0 +1,608 @@
+
+l4matrix.elf:     file format elf32-littlearm
+
+SYMBOL TABLE:
+10000000 l    d  .vector	00000000 .vector
+10000040 l    d  .boot	00000000 .boot
+10001000 l    d  .boot.ptegd	00000000 .boot.ptegd
+100cc000 l    d  .boot.stack	00000000 .boot.stack
+c00d0000 l    d  .text	00000000 .text
+c00db200 l    d  .data	00000000 .data
+c00db200 l    d  .prtn.info	00000000 .prtn.info
+c00db278 l    d  .prtn.data	00000000 .prtn.data
+c00dc000 l    d  .prtn.file	00000000 .prtn.file
+c00e0000 l    d  .bss	00000000 .bss
+c0134000 l    d  .vcpu	00000000 .vcpu
+c0534000 l    d  .pgdte	00000000 .pgdte
+c0d74000 l    d  .stack	00000000 .stack
+00000000 l    d  .comment	00000000 .comment
+00000000 l    d  .ARM.attributes	00000000 .ARM.attributes
+00000000 l    d  .debug_aranges	00000000 .debug_aranges
+00000000 l    d  .debug_info	00000000 .debug_info
+00000000 l    d  .debug_abbrev	00000000 .debug_abbrev
+00000000 l    d  .debug_line	00000000 .debug_line
+00000000 l    d  .debug_frame	00000000 .debug_frame
+00000000 l    d  .debug_str	00000000 .debug_str
+00000000 l    d  .debug_loc	00000000 .debug_loc
+00000000 l    d  .debug_ranges	00000000 .debug_ranges
+00000000 l    df *ABS*	00000000 ./Release/obj/l4matrix.elf/matrix/boot/boot.o
+10000000 l     F .vector	00000000 vector
+10000020 l       .vector	00000000 undEntry
+10000024 l       .vector	00000000 swiEntry
+10000028 l       .vector	00000000 preEntry
+1000002c l       .vector	00000000 datEntry
+10000030 l       .vector	00000000 reserveEntry
+10000034 l       .vector	00000000 irqEntry
+10000038 l       .vector	00000000 fiqEntry
+00000000 l    df *ABS*	00000000 ./Release/obj/l4matrix.elf/matrix/boot/bootAsm.o
+10000254 l       .boot	00000000 dcache_not_en
+100002ec l       .boot	00000000 finishedClearAll
+10000284 l       .boot	00000000 loop1ClearAll
+100002e0 l       .boot	00000000 skipClearAll
+100002c0 l       .boot	00000000 loop2ClearAll
+100002c4 l       .boot	00000000 loop3ClearAll
+10000394 l       .boot	00000000 finishedInvalidateAll
+1000032c l       .boot	00000000 loop1InvalidateAll
+10000388 l       .boot	00000000 skipInvalidateAll
+10000368 l       .boot	00000000 loop2InvalidateAll
+1000036c l       .boot	00000000 loop3InvalidateAll
+1000041c l       .boot	00000000 icache_not_en
+00000000 l    df *ABS*	00000000 bootMmu.c
+00000000 l    df *ABS*	00000000 bootScu.c
+00000000 l    df *ABS*	00000000 ./Release/obj/l4matrix.elf/matrix/startup.o
+c00d0090 l     F .text	00000000 armInitSP
+00000000 l    df *ABS*	00000000 bspInit.c
+00000000 l    df *ABS*	00000000 bspLib.c
+c00d9f50 l     O .text	00000010 hex.4979
+c00e0000 l     O .bss	00000080 _G_ulHoldingPen
+00000000 l    df *ABS*	00000000 loadPartition.c
+c00db200 l     O .prtn.info	00000028 _prtn_APP3_info
+c00db2a0 l     O .prtn.data	00000005 _prtn_APP3_name
+c00db278 l     O .prtn.data	00000026 _prtn_APP3_file
+c00db3a4 l     O .prtn.data	00000010 __maApp3Mems
+c00db3a4 l     O .prtn.data	00000000 __uiApp3Irqs
+c00db228 l     O .prtn.info	00000028 _prtn_APP2_info
+c00db2d0 l     O .prtn.data	00000005 _prtn_APP2_name
+c00db2a8 l     O .prtn.data	00000026 _prtn_APP2_file
+c00db3c0 l     O .prtn.data	00000010 __maApp2Mems
+c00db3b4 l     O .prtn.data	0000000c __uiApp2Irqs
+c00db250 l     O .prtn.info	00000028 _prtn_APP1_info
+c00db300 l     O .prtn.data	00000005 _prtn_APP1_name
+c00db2d8 l     O .prtn.data	00000026 _prtn_APP1_file
+c00db3d8 l     O .prtn.data	00000010 __maApp1Mems
+c00db3d0 l     O .prtn.data	00000008 __uiApp1Irqs
+c00db308 l     O .prtn.data	00000008 __uiL4SyIrqs
+c00db310 l     O .prtn.data	00000030 __maL4SyMems
+c00db340 l     O .prtn.data	00000004 __uiAppSIrqs
+c00db344 l     O .prtn.data	00000030 __maAppSMems
+c00db374 l     O .prtn.data	00000000 __uiAppDIrqs
+c00db374 l     O .prtn.data	00000010 __maAppDMems
+c00db384 l     O .prtn.data	00000000 __uiApp5Irqs
+c00db384 l     O .prtn.data	00000010 __maApp5Mems
+c00db394 l     O .prtn.data	00000000 __uiApp4Irqs
+c00db394 l     O .prtn.data	00000010 __maApp4Mems
+00000000 l    df *ABS*	00000000 gic.c
+00000000 l    df *ABS*	00000000 uart.c
+00000000 l    df *ABS*	00000000 timer.c
+00000000 l    df *ABS*	00000000 ccm_pll.c
+00000000 l    df *ABS*	00000000 cpu_utility.c
+00000000 l    df *ABS*	00000000 init.c
+00000000 l    df *ABS*	00000000 irq.c
+c00e0080 l     O .bss	00000400 _G_pvcpuVecMap
+c00e0480 l     O .bss	00000400 _G_pvcpuTickAt
+00000000 l    df *ABS*	00000000 kobj.c
+00000000 l    df *ABS*	00000000 kernel.c
+c00d1e28 l     F .text	00000074 __unlockKernelAndEnIrq
+c00d9f94 l     O .text	00000017 __func__.4926
+c00d9fac l     O .text	00000012 __func__.4949
+c00d9fc0 l     O .text	00000013 __func__.4963
+00000000 l    df *ABS*	00000000 partition.c
+00000000 l    df *ABS*	00000000 sched.c
+c00d25d0 l     F .text	00000010 __schedIdle
+00000000 l    df *ABS*	00000000 vcpu.c
+c00d299c l     F .text	00000040 __vcpuEntryShell
+c00d2ee8 l     F .text	00000064 vcpuDoPendIsr.part.0
+c00d9fd4 l     O .text	0000000b __func__.4953
+00000000 l    df *ABS*	00000000 heap.c
+c00d300c l     F .text	00000058 __deleteSegment
+c00d3064 l     F .text	0000014c __allocFrom
+00000000 l    df *ABS*	00000000 dump.c
+00000000 l    df *ABS*	00000000 armCp15Asm.o
+c00d3c68 l     F .text	00000000 armCp15CACtrlReg
+00000000 l    df *ABS*	00000000 armAssert.c
+00000000 l    df *ABS*	00000000 armCtx.c
+00000000 l    df *ABS*	00000000 armCtxAsm.o
+00000000 l    df *ABS*	00000000 armExc.c
+00000000 l    df *ABS*	00000000 armExcAsm.o
+00000000 l    df *ABS*	00000000 armLibAsm.o
+00000000 l    df *ABS*	00000000 armMpCoreAsm.o
+00000000 l    df *ABS*	00000000 armSpinlock.c
+00000000 l    df *ABS*	00000000 armMmu.c
+c00d45cc l     F .text	0000005c __pteAlloc
+c00d4628 l     F .text	000000e8 __armMmuFlags2Attr.part.1
+c0534000 l     O .pgdte	00040000 _G_pgdTabPool
+c00e0880 l     O .bss	00002000 _G_cPteTabStat
+c00e2880 l     O .bss	00000004 _G_uiVMSADevType
+c00e2884 l     O .bss	00000010 _G_cPgdTabStat
+c0574000 l     O .pgdte	00800000 _G_pteTabPool
+00000000 l    df *ABS*	00000000 armMmuAsm.o
+00000000 l    df *ABS*	00000000 armCacheAsm.o
+c00d4cd4 l       .text	00000000 dcache_not_en
+c00d4d94 l       .text	00000000 finishedFlushAll
+c00d4d2c l       .text	00000000 loop1FlushAll
+c00d4d88 l       .text	00000000 skipFlushAll
+c00d4d68 l       .text	00000000 loop2FlushAll
+c00d4d6c l       .text	00000000 loop3FlushAll
+c00d4e3c l       .text	00000000 finishedFlushAllPoU
+c00d4dd4 l       .text	00000000 loop1FlushAllPoU
+c00d4e30 l       .text	00000000 skipFlushAllPoU
+c00d4e10 l       .text	00000000 loop2FlushAllPoU
+c00d4e14 l       .text	00000000 loop3FlushAllPoU
+c00d4ee4 l       .text	00000000 finishedClearAll
+c00d4e7c l       .text	00000000 loop1ClearAll
+c00d4ed8 l       .text	00000000 skipClearAll
+c00d4eb8 l       .text	00000000 loop2ClearAll
+c00d4ebc l       .text	00000000 loop3ClearAll
+c00d4f8c l       .text	00000000 finishedClearAllPoU
+c00d4f24 l       .text	00000000 loop1ClearAllPoU
+c00d4f80 l       .text	00000000 skipClearAllPoU
+c00d4f60 l       .text	00000000 loop2ClearAllPoU
+c00d4f64 l       .text	00000000 loop3ClearAllPoU
+c00d5034 l       .text	00000000 finishedInvalidateAll
+c00d4fcc l       .text	00000000 loop1InvalidateAll
+c00d5028 l       .text	00000000 skipInvalidateAll
+c00d5008 l       .text	00000000 loop2InvalidateAll
+c00d500c l       .text	00000000 loop3InvalidateAll
+c00d50dc l       .text	00000000 finishedInvalidateAllPoU
+c00d5074 l       .text	00000000 loop1InvalidateAllPoU
+c00d50d0 l       .text	00000000 skipInvalidateAllPoU
+c00d50b0 l       .text	00000000 loop2InvalidateAllPoU
+c00d50b4 l       .text	00000000 loop3InvalidateAllPoU
+c00d512c l       .text	00000000 icache_not_en
+00000000 l    df *ABS*	00000000 _CandTable.c
+c00d51b4 l     F .text	00000034 __candTableFill
+00000000 l    df *ABS*	00000000 _ReadyTable.c
+00000000 l    df *ABS*	00000000 _RdyPrio.c
+00000000 l    df *ABS*	00000000 _Wakeup.c
+00000000 l    df *ABS*	00000000 _SmpIpi.c
+c00d5924 l     F .text	000000d4 __smpProcMsg
+c00d59f8 l     F .text	00000104 __smpIpiCall
+00000000 l    df *ABS*	00000000 _vIrq.c
+c00d9fe0 l     O .text	00000100 ucLsbBitmap.4822
+00000000 l    df *ABS*	00000000 ipc.c
+c00d5f90 l     F .text	00000048 __ipcReadyTestSetSf
+c00d5fd8 l     F .text	000000dc __ipcPlistPrioFlush
+c00d60b4 l     F .text	00000148 __ipcRecvFiHandle
+c00d61fc l     F .text	00000190 __ipcMsgCopy
+c00d638c l     F .text	000000a0 __ipcRecvNextPro
+c00d642c l     F .text	0000025c __ipcCloseHandle
+c00d6db8 l     F .text	000008c8 __ipcRecvWaitHandle
+c00d7680 l     F .text	00000224 __ipcRecvHandle
+c00d78a4 l     F .text	00001160 __ipcSendHandle
+c00da0e0 l     O .text	00000014 __func__.5041
+c00da0f4 l     O .text	00000012 __func__.5206
+c00da108 l     O .text	0000000d __func__.5008
+c00da118 l     O .text	0000000f __func__.5069
+c00da128 l     O .text	00000011 __func__.5216
+c00da13c l     O .text	00000012 __func__.5028
+c00da150 l     O .text	00000013 __func__.5106
+c00da164 l     O .text	0000000e __func__.5121
+c00da174 l     O .text	00000014 __func__.5182
+c00da188 l     O .text	00000011 __func__.5053
+c00da19c l     O .text	00000012 __func__.5169
+c00da1b0 l     O .text	00000012 __func__.5197
+c00da1c4 l     O .text	0000000d __func__.5192
+c00da1d4 l     O .text	00000011 __func__.5062
+c00da1e8 l     O .text	00000010 __func__.5162
+c00da1f8 l     O .text	00000010 __func__.5143
+c00da208 l     O .text	00000012 __func__.5136
+c00da21c l     O .text	0000000d __func__.5130
+c00da22c l     O .text	00000014 __func__.5154
+c00da240 l     O .text	00000012 __func__.5201
+c00da254 l     O .text	0000000d __func__.5239
+c00da264 l     O .text	0000000c __func__.5254
+00000000 l    df *ABS*	00000000 spin.c
+c00da270 l     O .text	00000011 __func__.4845
+c00da284 l     O .text	00000013 __func__.4853
+00000000 l    df *ABS*	00000000 syscall.c
+c00da298 l     O .text	00000020 uiUtimes.4918
+c00da2b8 l     O .text	0000000f __func__.4935
+c00da2c8 l     O .text	0000000e __func__.4940
+c00da2d8 l     O .text	0000000f __func__.4953
+c00da2e8 l     O .text	0000000d __func__.4998
+00000000 l    df *ABS*	00000000 list.c
+00000000 l    df *ABS*	00000000 _BitmapLib.c
+00000000 l    df *ABS*	00000000 _udivsi3.o
+c00d9d40 l       .text	00000000 .udivsi3_skip_div0_test
+00000000 l       *ABS*	00000000 shift
+00000000 l    df *ABS*	00000000 _dvmd_tls.o
+00000000 l    df *ABS*	00000000 
+10000768 l     F .boot	00000008 __start_veneer
+c00d3e10 g     F .text	00000000 armA1xL2CtlSet
+c00d19e0 g     F .text	00000090 irqAttach
+c00d5058 g     F .text	00000000 armDCacheInvalidateAllPoU
+c00d4a68 g     F .text	00000000 armMmuPreFaultStatus
+c00e4000 g     O .bss	00000004 _K_ulNCpus
+c00d4c48 g     F .text	00000000 armCacheCTR
+c00d0c5c g     F .text	00000028 armGlobalTimerCounterSet
+c00d8a04 g     F .text	00000498 ipcDoSyscall
+c00d43d8 g     F .text	00000000 archFindMsb
+c00d0274 g     F .text	00000008 bspInfoSfrBase
+c00df160 g       .prtn.file	00000000 _prtn_APP3_end
+c00d3c60 g     F .text	00000000 armCp15AuxCtrlReg
+10000428 g     F .boot	00000000 bootArmCp15MainIdReg
+c00d5c5c g     F .text	0000005c _SmpIpiSendOther
+c00d21a8 g     F .text	00000030 prtnAddKumem
+c00e4004 g     O .bss	000004b4 _K_heapKernel
+c00d08ec g     F .text	0000001c armGicIrqWriteDone
+c00d35c4 g     F .text	000002a0 dump
+c00d1e9c g     F .text	00000094 kernelEnterAndDisIrq
+c00d0e28 g     F .text	000000d4 imx6qCcmPLLInit
+c00d43c0 g     F .text	00000000 archFindLsb
+c00d5180 g     F .text	00000000 armICacheInvalidateAll
+c00d5514 g     F .text	00000060 _ReadyTableAdd
+100006b4 g     F .boot	0000003c bootSecondaryMmu
+c00d0284 g     F .text	00000008 bspInfoKernRamBase
+c00d4f08 g     F .text	00000000 armDCacheClearAllPoU
+c00d0cd4 g     F .text	0000004c armGlobalTimerComparatorGet
+c00d16d8 g     F .text	0000003c imx6qLpmWakeUpSrc
+c00d4c80 g     F .text	00000000 armCacheRetireDefault
+c00d9c94 g     F .text	00000030 _BitmapAdd
+c00d2fd8 g     F .text	00000014 vcpuDoPendIsr
+c00d024c g     F .text	00000010 bspIntVectorEnable
+c00d91f4 g     F .text	0000002c spinUnlock
+c00d0d90 g     F .text	00000020 armPrivateTimerStart
+c00d9220 g     F .text	00000058 scTimeToTicks
+10000188 g     F .boot	00000000 bootArmMmuInvalidateTLB
+c00d2e5c g     F .text	0000003c vcpuSaveStatus
+c00d4fb0 g     F .text	00000000 armDCacheInvalidateAll
+c00d9f90 g     O .text	00000004 PLL1_OUTPUT
+c00d43a8 g     F .text	00000000 archIntEnableForce
+c00d34a4 g     F .text	0000009c heapAllocSegment
+c00d3db0  w    F .text	00000000 armControlFeatureEnable
+100003c8 g     F .boot	00000000 bootArmICacheInvalidateAll
+c00d0bc8 g     F .text	00000024 armGlobalTimerStart
+c00d0888 g     F .text	0000002c armGicCpuEnable
+c00d2da0 g     F .text	00000020 vcpuSetAffinity
+100c8000 g       .boot.ptegd	00000000 _pgd_table
+c00e44b8 g     O .bss	00000004 _K_wuDelay
+c00d5e50 g     F .text	00000018 _SmpIpiUpdate
+c00d1fec g     F .text	0000004c kernelUnlockSched
+c00d06e0 g     F .text	00000048 armGicIrqSecuritySet
+c00d1abc g     F .text	0000000c irqEnable
+c00d6810 g     F .text	00000084 ipcTickTimeoutPro
+c00d3f78 g     F .text	000001d8 archSwiHandle
+c00d4ab0 g     F .text	00000000 armMmuDisable
+c00d3e68 g     F .text	0000006c archVcpuCtxCreate
+c00d43a0 g     F .text	00000000 archIntEnable
+10000518 g     F .boot	00000080 bootSmpCoreInit
+c00d0190 g     F .text	0000002c halSecondaryCpuMain
+c00d3dd0  w    F .text	00000000 armAuxControlFeatureEnable
+c00d11e4 g     F .text	0000038c imx6qClkGateSet
+c00d8fdc g     F .text	00000078 spinTryLock
+c00d42d8 g     F .text	00000000 archDatEntry
+c00d3cb8 g     F .text	00000000 armBranchPredictorInvalidate
+c00d079c g     F .text	00000028 armGicIrqPrioritySet
+c00e44bc g     O .bss	00002084 _K_readyGlobal
+100d0000 g       .text	00000000 __mx_phys_addr
+c00d0de4 g     F .text	00000044 armPrivateTimerCounterSet
+c00d1744 g     F .text	00000014 imx6qIpuClkCfg
+c00d11cc g     F .text	00000018 imx6qCcgrCfg
+100006f4 g     F .boot	0000001c bootArmScuFeatureEnable
+c00d1570 g     F .text	00000168 imx6qClkGateSetOnAll
+c00d5604 g     F .text	00000048 _RdyPrioGet
+10000220 g     F .boot	00000000 bootArmDCacheV7Disable
+c00d417c g     F .text	0000002c archDatHandle
+c00d4e60 g     F .text	00000000 armDCacheClearAll
+c00d21d8 g     F .text	00000148 prtnRestart
+100d0000 g       .boot.stack	00000000 _boot_stack_end
+10000420 g     F .boot	00000000 bootArmPrivatePeriphBaseGet
+100003b8 g     F .boot	00000000 bootArmDCacheEnable
+c00db200 g       .prtn.info	00000000 _prtn_info
+c00d67b0 g     F .text	00000060 ipcMsgUlRead
+c00d2d88 g     F .text	00000018 vcpuGetPriority
+c00d3c40 g     F .text	00000000 armCp15MainIdReg
+c00d9bfc g     F .text	0000001c _List_Line_Add_Left
+c00d6cb4 g     F .text	00000104 __ipcErrorPro
+c00d4c68 g     F .text	00000000 armCacheTypeReg
+c00d1af8 g     F .text	00000094 irqIsr
+c00d2898 g     F .text	00000070 schedActiveCpu
+c00d5eb0 g     F .text	00000024 _vIrqPendClr
+c00d446c g     F .text	00000038 archSpinDelay
+c00d1ac8 g     F .text	0000000c irqDisable
+c00d0764 g     F .text	00000038 armGicIrqIsEnable
+c00d0320 g     F .text	00000074 bspCpuUpDone
+c00d0efc g     F .text	00000048 imx6qUsdhcClkSet
+c00d0a64 g     F .text	00000058 uartPutChar
+c00d9088 g     F .text	00000024 spinLockAndDisIrq
+c00d4ae0 g     F .text	00000000 armMmuDisableWriteBuffer
+c00d3c50 g     F .text	00000000 armCp15LtbTypeReg
+c00d3d38 g     F .text	00000000 armVectorBaseAddrSet
+c00d9134 g     F .text	000000c0 spinUnlockAndEnIrq
+c00d08d4 g     F .text	00000018 armGicIrqReadAck
+c00d4ba8 g     F .text	00000000 armMmuSetProcessId
+c00d3f38 g     F .text	00000000 archJumpToUser
+c00d1ad4 g     F .text	00000024 irqIpiVecSet
+c00d9f7c g     O .text	00000014 PLL3_OUTPUT
+c00d0294 g     F .text	00000008 bspInfoPrtnRamBase
+c00d9d40 g     F .text	000001ec .hidden __udivsi3
+00080000 g       *ABS*	00000000 KERN_STACK_SIZE
+c00d0a40 g     F .text	00000024 armGicIntVecterDisable
+c00d9b50 g     F .text	0000004c _List_Ring_Del
+c00d3f48 g     F .text	00000000 archJumpToKern
+c00d580c g     F .text	00000118 _WakeupTick
+00004000 g       *ABS*	00000000 BOOT_PGD_TABLE_SIZE
+c00d4c50 g     F .text	00000000 armCacheCCSIDR
+c00d4308 g     F .text	00000000 archIntEntry
+c00d0c10 g     F .text	0000004c armGlobalTimerCounterGet
+c00d4828 g     F .text	0000002c __armMmuFlags2Attr
+10000440 g     F .boot	00000000 bootArmBranchPredictorInvalidate
+c00d3c90 g     F .text	00000000 armSyncBusMode
+c00d9c18 g     F .text	0000001c _List_Line_Add_Right
+c00d6714 g     F .text	00000018 ipcMsgReadOpen
+c00d4bb0 g     F .text	00000000 armMmuInvalidateTLB
+c00d3f54 g     F .text	00000024 archUndHandle
+c00d18a8 g     F .text	00000044 imx6qCpuDisable
+100001e0 g     F .boot	00000000 bootArmAuxControlFeatureEnable
+c00d1d14 g     F .text	00000064 kobjFree
+c00d3bbc g     F .text	00000050 dumpHeap
+c00d1714 g     F .text	00000030 imx6qCcmLowPower
+c00d2108 g     F .text	00000040 kernelIsEnter
+c00d47fc g     F .text	0000002c archMmuLoad
+10000430 g     F .boot	00000000 bootArmCurCpuId
+c00d2148 g     F .text	0000002c kernelSched
+c00d09d0 g     F .text	00000070 armGicIntVecterEnable
+10000040 g     F .boot	00000000 boot
+c00d0858 g     F .text	00000030 armGicSoftwareIntSend
+c00d028c g     F .text	00000008 bspInfoKernRamSize
+c00d5cb8 g     F .text	00000044 _SmpCallFunc
+c00d540c g     F .text	0000005c _CandTableVcpuGet
+c00d4c58 g     F .text	00000000 armCacheCLIDR
+c00d4380 g     F .text	00000000 archIntDisable
+c00d0bac g     F .text	0000001c armGlobalTimerIntClear
+c00d4218 g     F .text	0000001c archFiqHandle
+c00d6688 g     F .text	00000040 ipcReadyTestSafe
+c00d0808 g     F .text	00000050 armGicIrqTargetGet
+c00d1dd0 g     F .text	00000058 kobjCheck
+10000140 g     F .boot	00000000 bootArmMmuSetTTBase1
+c00d568c g     F .text	00000008 _RdyPrioDelVcpu
+c0534000 g       .vcpu	00000000 __bss_end
+c00d5130 g     F .text	00000000 armICacheInvalidate
+c00d1b8c g     F .text	00000048 irqEnter
+c00d3ad8 g     F .text	000000e4 dumpCpus
+c00d2610 g     F .text	00000124 schedule
+c00d39c0 g     F .text	00000050 dumpUctx1
+c00d3ca8 g     F .text	00000000 armWaitForInterrupt
+c00d672c g     F .text	0000001c ipcMsgWriteOpen
+c00d3ef0 g     F .text	00000000 archVcpuCtxSwitch
+00004000 g       *ABS*	00000000 BOOT_STACK_SIZE
+c00d4150 g     F .text	0000002c archPreHandle
+c00d2b1c g     F .text	00000080 vcpuSleep
+10000180 g     F .boot	00000000 bootArmMmuSetProcessId
+c00d4250 g     F .text	00000000 archSwiEntry
+c00d8fcc g     F .text	00000010 spinInit
+c00d47ac g     F .text	00000050 archMmuAllocPageTable
+c00d4854 g     F .text	0000013c archMmuMap
+100000d0 g     F .boot	00000000 bootArmMmuEnable
+c00d1c5c g     F .text	00000004 kobjInit
+10000110 g     F .boot	00000000 bootArmMmuSetTTBase0
+c00d43b8 g     F .text	00000000 archGetCpsr
+c00d44a8 g     F .text	00000058 archSpinLock
+c00d6938 g     F .text	0000037c __ipcStateCheckPro
+c00d9c34 g     F .text	00000038 _List_Line_Del
+c00d0bec g     F .text	00000024 armGlobalTimerStop
+c00d06b0 g     F .text	00000030 armGicEnable
+c00d4430  w    F .text	00000000 armSpinUnlock
+c00d3e48 g     F .text	0000001c archAssert
+c00d4500 g     F .text	00000068 archSpinTryLock
+c00db278 g       .prtn.info	00000000 _eprtn_info
+c00d4710 g     F .text	00000094 archMmuInit
+c00d3d18 g     F .text	00000000 armBranchPredictionDisable
+c00d5468 g     F .text	000000ac _ReadyTableGet
+c00d0394 g     F .text	00000008 bspCpuDown
+c00e6540 g     O .bss	00000004 _K_pprtnKernel
+c00d42a8 g     F .text	00000000 archPreEntry
+10000400 g     F .boot	00000000 bootArmICacheDisable
+c00d66c8 g     F .text	0000004c ipcReadyTryTestSetSafe
+c00d4454 g     F .text	00000018 archSpinInit
+c00d4450  w    F .text	00000000 archMpInt
+c00d0d20 g     F .text	00000058 armPrivateTimerInit
+c00d0908 g     F .text	00000080 armGicInit
+c00d25e0 g     F .text	00000030 schedSwap
+c00d4af0 g     F .text	00000000 armMmuEnableAlignFault
+c00d0d78 g     F .text	00000018 armPrivateTimerIntClear
+000c5c00 g       *ABS*	00000000 BOOT_PTE_TABLE_SIZE
+c00d2908 g     F .text	00000094 schedInit
+c00d3cf8 g     F .text	00000000 armBranchPredictionEnable
+c00d5290 g     F .text	00000114 _CandTableTryAdd
+c00d0c84 g     F .text	00000050 armGlobalTimerComparatorSet
+c00d1bd4 g     F .text	0000005c irqExit
+c00d9bbc g     F .text	00000040 _List_Line_Add_Tail
+c00d039c g     F .text	00000020 bspCpuIpiVectorInstall
+c00d0988 g     F .text	00000048 armGicCpuInit
+c00d47a8 g     F .text	00000004 archMmuDisable
+c00d027c g     F .text	00000008 bspInfoSfrSize
+c00d0260 g     F .text	00000014 bspIntVectorIsEnable
+c00d9f78 g     O .text	00000004 PLL4_OUTPUT
+c00d01f8 g     F .text	0000004c bspIntHandle
+c00d31b0 g     F .text	000001f4 heapAdd
+10000754 g     F .boot	00000014 bootArmScuAccessCtrlSet
+c00d3e64 g     F .text	00000004 archPartitionCreate
+c00d4a70 g     F .text	00000000 armMmuAbtFaultAddr
+c00e8000 g     O .bss	00000010 _K_klKernel
+c00d2734 g     F .text	000000dc schedTick
+c00d0244 g     F .text	00000008 bspClearInt
+c00d1c60 g     F .text	000000b4 kobjAlloc
+c00d3e40 g     F .text	00000000 armPrivatePeriphBaseGet
+c00d025c g     F .text	00000004 bspIntVectorDisable
+c00d5d8c g     F .text	000000b0 _SmpIpiProc
+c00d3a10 g     F .text	000000c8 dumpReady
+c00d4ce8 g     F .text	00000000 armDCacheFlushPoU
+c00d90dc g     F .text	00000058 spinUnlockIgnIrq
+c00d2f4c g     F .text	0000008c vcpuOccurIrq
+c00d5e3c g     F .text	00000014 _SmpIpiTryProc
+c00d2320 g     F .text	000002b0 prtnInit
+c00d9f74 g     O .text	00000004 PLL5_OUTPUT
+c00d2810 g     F .text	00000088 schedYield
+1000072c g     F .boot	00000028 bootArmScuSecureInvalidateAll
+c00d5100 g     F .text	00000000 armICacheEnable
+c00d47a4 g     F .text	00000004 archMmuEnable
+c00d10b4 g     F .text	00000118 imx6qPeriClkGet
+c00d5750 g     F .text	00000038 _WakeupDel
+c00d5cfc g     F .text	00000090 _SmpCallFuncAllOther
+c00d4c90 g     F .text	00000000 armDCacheEnable
+c00d9278 g     F .text	00000848 scEntry
+c00d4ad0 g     F .text	00000000 armMmuEnableWriteBuffer
+c00d4c70 g     F .text	00000000 armCacheRetireRR
+c00d3df0  w    F .text	00000000 armAuxControlFeatureDisable
+c00d9f4c  w    F .text	00000004 .hidden __aeabi_ldiv0
+c0df4000 g       .stack	00000000 __stack_end
+c00de000 g       .prtn.file	00000000 _prtn_APP2_start
+c00d197c g     F .text	00000038 initSmpMatrix
+c00d03bc g     F .text	0000005c bspDelayUs
+c00e8010 g     O .bss	00000008 _K_ui64TickCounter
+c00d3ed4 g     F .text	00000004 archVcpuCtxPrint
+c00d3d90  w    F .text	00000000 armControlFeatureDisable
+c00d1d78 g     F .text	00000058 kobjGet
+c00e0000 g       .bss	00000000 __bss_start
+c00d3c48 g     F .text	00000000 armCp15TcmTypeReg
+100004b0 g     F .boot	0000003c bootArmErrataFix
+c00d4d10 g     F .text	00000000 armDCacheFlushAll
+c00d0418 g     F .text	00000298 bspDebugMsg
+c00d02ac g     F .text	00000008 bspMmuPteMaxNum
+c00d9b9c g     F .text	00000020 _List_Line_Add_Ahead
+c00d1810 g     F .text	00000098 imx6qCpuStart2nd
+c00d19b4 g     F .text	0000002c irqRegister
+c00d51e8 g     F .text	000000a8 _CandTableUpdate
+c00d9d40 g     F .text	00000000 .hidden __aeabi_uidiv
+c00d3ed8 g     F .text	00000000 archVcpuCtxStart
+c00d33d4 g     F .text	000000c8 heapAllocAlign
+c00d4a60 g     F .text	00000000 armMmuAbtFaultStatus
+c00d4c60 g     F .text	00000000 armCacheCSSELR
+10000178 g     F .boot	00000000 bootArmMmuV7SetTTBCR
+c00d4bf8 g     F .text	00000000 armMmuInvalidateTLBMVA
+c00d2038 g     F .text	00000070 kernelLockIgnIrq
+c00d55d0 g     F .text	00000034 _ReadyTableSeek
+c00d4b18 g     F .text	00000000 armMmuGetTTBCR
+c00d565c g     F .text	0000001c _RdyPrioIsOne
+10000268 g     F .boot	00000000 bootArmDCacheV7ClearAll
+c00d3c58 g     F .text	00000000 armCp15ControlReg
+10000470 g     F .boot	00000000 bootArmBranchPredictionEnable
+c00d6894 g     F .text	000000a4 ipcInit
+c00d4db8 g     F .text	00000000 armDCacheFlushAllPoU
+c00d3864 g     F .text	0000015c dumpUctx
+c00d1fac g     F .text	00000020 kernelEnter
+c00d29dc g     F .text	000000c8 vcpuCreate
+c00d4b20 g     F .text	00000000 armMmuSetTTBCR
+c00d08b4 g     F .text	00000020 armGicCpuPriorityMaskSet
+c00d564c g     F .text	00000010 _RdyPrioIsEmpty
+c00d02a4 g     F .text	00000008 bspMmuPgdMaxNum
+c00d33a4 g     F .text	00000030 heapInit
+c00d2e48 g     F .text	00000014 vcpuIsIntEnable
+c00d9b20 g     F .text	00000030 _List_Ring_Add_Last
+c00d9af0 g     F .text	00000030 _List_Ring_Add_Front
+c00d41fc g     F .text	0000001c archResHandle
+c00d4410  w    F .text	00000000 armSpinTryLock
+c00d00e0 g     F .text	00000004 targetInit
+c00d349c g     F .text	00000008 heapAlloc
+c00d4440  w    F .text	00000000 archMpCur
+c00dc000 g       .prtn.file	00000000 _prtn_APP1_start
+c00d4b10 g     F .text	00000000 armMmuSetDomain
+c00d5ed4 g     F .text	0000008c _vIrqPendGet
+100001c0 g     F .boot	00000000 bootArmControlFeatureDisable
+10001000 g       .boot.ptegd	00000000 _pte_table
+c00d0dd0 g     F .text	00000014 armPrivateTimerCounterGet
+c00d2e98 g     F .text	00000050 vcpuRestoreStatus
+10000310 g     F .boot	00000000 bootArmDCacheV7InvalidateAll
+c00ec000 g     O .bss	00041d00 _K_cpuTable
+c00d2dd0 g     F .text	00000008 vcpuBindIpcMsg
+c00d0000 g       .text	00000000 __mx_virt_addr
+c00d00e4 g     F .text	000000ac halPrimaryCpuMain
+c00d18ec g     F .text	00000090 initMatrix
+c00d3e28 g     F .text	00000000 armA1xL2CtlGet
+c00d2e10 g     F .text	00000038 vcpuEnableInt
+c00d0abc g     F .text	00000070 uartPutStr
+c00d9c6c g     F .text	00000028 _BitmapInit
+c00d2dc8 g     F .text	00000008 vcpuBindPartition
+c00d2aa4 g     F .text	00000060 vcpuStart
+c00d5788 g     F .text	00000038 _WakeupIsIn
+c00d2dd8 g     F .text	00000038 vcpuDisableInt
+c00d9cc4 g     F .text	00000038 _BitmapDel
+c00d2b9c g     F .text	00000074 vcpuSuspend
+c00d9f2c g     F .text	00000020 .hidden __aeabi_uidivmod
+c00d3d50 g     F .text	00000000 armHighVectorEnable
+c00d4b00 g     F .text	00000000 armMmuDisableAlignFault
+c00d02c4 g     F .text	0000005c bspCpuUp
+c00d6768 g     F .text	00000048 ipcMsgUlWrite
+c00df000 g       .prtn.file	00000000 _prtn_APP3_start
+c00d02b4 g     F .text	00000010 bspMpInt
+c00d5678 g     F .text	00000014 _RdyPrioAddVcpu
+c00d5afc g     F .text	00000160 _SmpIpiSend
+c00d2c10 g     F .text	00000178 vcpuWakeup
+c00d3d70 g     F .text	00000000 armHighVectorDisable
+c00d4b28 g     F .text	00000000 armMmuSetTTBase0
+c0134000 g     O .vcpu	00400000 _K_vcpuTable
+c00d3c0c g     F .text	00000030 dumpHook
+c00d5574 g     F .text	0000005c _ReadyTableDel
+10000170 g     F .boot	00000000 bootArmMmuSetDomain
+c00d1fcc g     F .text	00000020 kernelExit
+c012dd00 g     O .bss	00000180 _K_prtnTable
+10000710 g     F .boot	0000001c bootArmScuFeatureDisable
+c00d1f30 g     F .text	0000007c kernelExitAndEnIrq
+10000200 g     F .boot	00000000 bootArmAuxControlFeatureDisable
+c00d029c g     F .text	00000008 bspInfoPrtnRamSize
+c00d01bc g     F .text	0000003c uart_put_hex
+100000f0 g     F .boot	00000000 bootArmMmuDisable
+c00d4568 g     F .text	00000064 archSpinUnlock
+c00d2174 g     F .text	00000034 prtnMakeCur
+c00d0000 g     F .text	00000000 start
+c00d5e8c g     F .text	00000024 _vIrqPendSet
+c00d6748 g     F .text	00000020 ipcMsgFlush
+10000490 g     F .boot	00000000 bootArmBranchPredictionDisable
+100006f0 g     F .boot	00000004 bootArmScuGet
+c00d5694 g     F .text	000000bc _WakeupAdd
+c00d07c4 g     F .text	00000044 armGicIrqTargetSet
+c00d0b2c g     F .text	00000080 armGlobalTimerInit
+c00d9f4c  w    F .text	00000004 .hidden __aeabi_idiv0
+c00d1a70 g     F .text	0000004c irqDisAttach
+c00d41a8 g     F .text	00000054 archIntHandle
+c00d1c30 g     F .text	0000002c swiRegister
+c00d4ca0 g     F .text	00000000 armDCacheDisable
+c00de160 g       .prtn.file	00000000 _prtn_APP2_end
+c00d53a4 g     F .text	00000068 _CandTableTryDel
+c00d2b04 g     F .text	00000018 vcpuSetIrqEntry
+c00d2fec g     F .text	00000020 vcpuGetCur
+c00d0728 g     F .text	0000003c armGicIrqEnable
+c00d57c0 g     F .text	0000004c _WakeupTime
+c00d5110 g     F .text	00000000 armICacheDisable
+c00d9f60 g     O .text	00000014 PLL2_OUTPUT
+c00d9054 g     F .text	00000034 spinLockIgnIrq
+c00d20a8 g     F .text	00000060 kernelUnlockIgnIrq
+c00d5e68 g     F .text	00000024 _vIrqPendIni
+c00d44a4 g     F .text	00000004 archSpinNotify
+c00d0db0 g     F .text	00000020 armPrivateTimerStop
+c012de80 g     O .bss	00004000 _K_stkUser
+c00d4a78 g     F .text	00000000 armMmuInitSysRom
+c00d4a90 g     F .text	00000000 armMmuEnable
+c00d0f44 g     F .text	00000170 imx6qMainClkGet
+c00d3c70 g     F .text	00000000 armFastBusMode
+c00d3c80 g     F .text	00000000 armAsyncBusMode
+100004ec g     F .boot	0000002c bootArmMmuGlobalInit
+c00d4990 g     F .text	000000d0 archMmuCopy
+c00d9cfc g     F .text	00000034 _BitmapHigh
+c00d43f0  w    F .text	00000000 armSpinLock
+c00d3540 g     F .text	00000084 heapFree
+10000598 g     F .boot	0000011c bootPrimaryMmu
+c00d4b68 g     F .text	00000000 armMmuSetTTBase1
+c00d5f60 g     F .text	00000030 _vIrqPending
+c00d9d30 g     F .text	00000010 _BitmapIsEmpty
+c00d8e9c g     F .text	00000130 ipcKernSend
+c00d90ac g     F .text	00000030 spinLock
+c00d4238 g     F .text	00000000 archUndEntry
+c00dd11c g       .prtn.file	00000000 _prtn_APP1_end
+c00d1758 g     F .text	000000b8 imx6qGpuClkCfg
+c00d9ac0 g     F .text	00000030 _List_Ring_Add_Ahead
+c0131e80 g     O .bss	00000004 _K_ulKernFlags
+c00d2dc0 g     F .text	00000008 vcpuSetUserStack
+
+
