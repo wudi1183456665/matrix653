@@ -12,9 +12,9 @@
 ;**
 ;** 文   件   名: boot.S
 ;**
-;** 创   建   人: L Y.Q.
+;** 创   建   人:
 ;**
-;** 文件创建日期: 2018 年 08 月 09 日
+;** 文件创建日期: 2018 年 12 月 17 日
 ;**
 ;** 描        述: 在开启 MMU 之前的启动代码.
 ;*********************************************************************************************************/
@@ -22,134 +22,75 @@
 #define ASSEMBLY 1
 #endif
 
-#include <arch/arch_assembler.h>
+#include <../arch/arch_assembler.h>
 
 ;/*********************************************************************************************************
-;  单个核心 SVC 模式下堆栈大小
+;  单个核心PowerPC supervisor mode of operation下堆栈大小
 ;  本堆栈的使用从核复位开始, 至跳入高 1G 地址结束.(作用范围是本文件夹代码)
 ;*********************************************************************************************************/
 #define PER_CPU_STACK_SIZE  0x00001000                                  ;/*  4K                         */
 
+
+	 FILE_BEGIN()
 ;/*********************************************************************************************************
 ;  声明外部函数和导出全局函数
 ;*********************************************************************************************************/
 
     IMPORT_LABEL(start)                                                 ;/*  虚拟地址入口                */
     IMPORT_LABEL(bootPrimaryMmu)                                        ;/*  设置最初的内存映射          */
-    IMPORT_LABEL(bootSecondaryMmu)                                      ;/*  设置最初的内存映射          */
-    IMPORT_LABEL(bootPpcCurCpuId)                                       ;/*  获取当前 CPU ID 号 [0 - 3]  */
-    IMPORT_LABEL(bootPpcDCacheV7InvalidateAll)
-    IMPORT_LABEL(bootPpcDCacheV7Disable)
-    IMPORT_LABEL(bootPpcICacheInvalidateAll)
-    IMPORT_LABEL(bootPpcICacheDisable)
-    IMPORT_LABEL(bootPpcBranchPredictorInvalidate)
-    IMPORT_LABEL(bootPpcBranchPredictionDisable)
-    IMPORT_LABEL(bootPpcMmuInvalidateTLB)
-    IMPORT_LABEL(bootPpcMmuDisable)
 
-    EXPORT_LABEL(boot)                                                  ;/*  bsp 汇编入口函数            */
+	IMPORT_LABEL(ppcMmuEnable)
+    IMPORT_LABEL(ppcMmuDisable)
+	;.extern ppcMmuDisable
 
-;/*********************************************************************************************************
-;  异常向量表
-;*********************************************************************************************************/
+    IMPORT_LABEL(ppcMmuInvalidateTLBNr)
+    IMPORT_LABEL(ppcMmuInvalidateTLBEA)
 
-    .code 32
-    .section .vector, "ax"
-    .balign 32
+    IMPORT_LABEL(ppc60xICacheDisable)
+    IMPORT_LABEL(ppc60xDCacheDisable)
 
-FUNC_DEF(vector)
-    B       boot
-    LDR     PC, undEntry                                                ;/*  未定义指令                 */
-    LDR     PC, swiEntry                                                ;/*  软件中断                   */
-    LDR     PC, preEntry                                                ;/*  指令预取中止               */
-    LDR     PC, datEntry                                                ;/*  数据访问中止               */
-    LDR     PC, reserveEntry
-    LDR     PC, irqEntry                                                ;/*  外部中断请求               */
-    LDR     PC, fiqEntry                                                ;/*  快速中断请求               */
-    FUNC_END()
+    IMPORT_LABEL(ppc60xICacheInvalidate)
+    IMPORT_LABEL(ppc60xDCacheInvalidate)
+    IMPORT_LABEL(ppc60xDCacheClear)
+    IMPORT_LABEL(ppc60xDCacheFlush)
 
-FUNC_LABEL(undEntry)
-    .word   archUndEntry
+    IMPORT_LABEL(ppc60xICacheInvalidateAll)
+    .extern ppc60xDCacheInvalidateAll
+    IMPORT_LABEL(ppc60xDCacheFlushAll)
+    IMPORT_LABEL(ppc60xDCacheClearAll)
 
-FUNC_LABEL(swiEntry)
-    .word   archSwiEntry
+    IMPORT_LABEL(ppc60xBranchPredictionDisable)
+    IMPORT_LABEL(ppc60xBranchPredictorInvalidate)
 
-FUNC_LABEL(preEntry)
-    .word   archPreEntry
+    ;EXPORT_LABEL(boot)                                                  ;/*  bsp 汇编入口函数            */
+	.global boot
 
-FUNC_LABEL(datEntry)
-    .word   archDatEntry
+;/*
+;** File begin
+;*/
 
-FUNC_LABEL(reserveEntry)
-    .word   archResHandle
-
-FUNC_LABEL(irqEntry)
-    .word   archIntEntry
-
-FUNC_LABEL(fiqEntry)
-    .word   archFiqHandle
-
-;/*********************************************************************************************************
-;  Section .boot.text, This Matrix boot time used code
-;*********************************************************************************************************/
-
-    //FILE_BEGIN()
-    .code 32
     .section .boot.text, "ax"
     .balign 8;
 
+;/*********************************************************************************************************
+;  启动入口
+;*********************************************************************************************************/
+
 FUNC_DEF(boot)
+    ;/*  关闭中断 */
+    XOR     R3 , R3 , R3
+    ISYNC
+    MTMSR   R3
+    ISYNC
 
 ;/*********************************************************************************************************
-;  进入 SVC32 模式(关中断)
+;  初始化堆栈
 ;*********************************************************************************************************/
 
-    MSR     CPSR_c, #(SVC32_MODE | DIS_INT)
-
-;/*********************************************************************************************************
-;  初始化堆栈(包括主核与从核, 这里仅设置 SVC 模式的堆栈)
-;*********************************************************************************************************/
-
-    BL      bootArmCurCpuId                                            ;/*  获取当前 CPU ID 存入 R0      */
-
-    LDR     R1 , =_boot_stack_end                                      ;/*  栈区顶端地址                 */
-LINE_LABEL(0)
-    CMP     R0 , #0
-    SUBNE   R1 , R1 , #PER_CPU_STACK_SIZE
-    SUBNE   R0 , R0 , #1
-    BNE     0b
-
-    MOV     SP , R1                                                    ;/*  设置堆栈                     */
-
-;/*********************************************************************************************************
-;  Patch for i.MX6 errarta
-;*********************************************************************************************************/
-;/*********************************************************************************************************
-;  ARM Errarta: 743622, 751472, 743623
-;*********************************************************************************************************/
-    MRC     p15, 0 , R0, c15, c0, 1
-    ORR     R0 , R0, #0x00000040
-    ORR     R0 , R0, #0x00000800
-    ORR     R0 , R0, #0x00100000
-    MCR     p15, 0 , R0, c15, c0, 1
-;/*********************************************************************************************************
-;  ARM Errarta: 845369 (patch will reduce speed of memset/memcpy)
-;*********************************************************************************************************/
-    MRC     p15, 0 , R0, c15, c0, 1
-    ORR     R0 , R0, #0x00400000
-    MCR     p15, 0 , R0, c15, c0, 1
-;/*********************************************************************************************************
-;  ARM Errarta: 761320 (patch will reduce bus performance )
-;  - CPU0 performs a full cache line write to address A, then a full cache line write to address B
-;  - CPU1 performs a full cache line write to address B, then a full cache line write to address A
-;  - CPU2 performs read accesses to addresses A and B
-;*********************************************************************************************************/
-    MRC     p15, 0 , R0, c15, c0, 1
-    ORR     R0 , R0, #0x00200000
-    MCR     p15, 0 , R0, c15, c0, 1
-;/*********************************************************************************************************
-;  WARNING: ARM Errarta: 743626 is NOT handled yet
-;*********************************************************************************************************/
+LINE_LABEL(ppcSpInit)
+    LIS     SP , HI(__stack_end)
+    ORI     SP , SP , LO(__stack_end)
+    SYNC
 
 ;/*********************************************************************************************************
 ;  关闭 D-Cache(无效)
@@ -158,37 +99,25 @@ LINE_LABEL(0)
 ;  关闭 MMU(无效 TLB)
 ;*********************************************************************************************************/
 
-    BL      bootArmDCacheV7InvalidateAll
-    BL      bootArmDCacheV7Disable
-    BL      bootArmICacheInvalidateAll
-    BL      bootArmICacheDisable
+    BL      ppc60xDCacheInvalidateAll
+    BL      ppc60xDCacheDisable
+    BL      ppc60xICacheInvalidateAll
+    BL      ppc60xICacheDisable
 
-    BL      bootArmBranchPredictorInvalidate
-    BL      bootArmBranchPredictionDisable
+    BL      ppc60xBranchPredictionDisable
+    BL      ppc60xBranchPredictorInvalidate
 
-    BL      bootArmMmuInvalidateTLB
-    BL      bootArmMmuDisable
-
-;/*********************************************************************************************************
-;  如果不是 Primary CPU, 则进入 bootSecondaryMmu 函数
-;*********************************************************************************************************/
-
-    BL      bootArmCurCpuId
-    CMP     R0, #0
-    BLNE    bootSecondaryMmu
+    BL      ppcMmuInvalidateTLBNr
+	BL      ppcMmuInvalidateTLBEA
+    BL      ppcMmuDisable
 
 ;/*********************************************************************************************************
-;  如果是 Primary CPU, 则进入 bootPrimaryMmu 函数, 初始化最初的页表
+;  进入bootPrimaryMmu函数,初始化最初的页表
 ;*********************************************************************************************************/
 
-    LDR     R10, =bootPrimaryMmu
-    MOV     LR , PC
-    BX      R10
+    BL      bootPrimaryMmu
 
-    B       .
     FUNC_END()
-
-    FILE_END()
 
 ;/*********************************************************************************************************
 ;  END

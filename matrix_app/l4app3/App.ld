@@ -24,8 +24,8 @@
     ¡¥Ω”≈‰÷√
 *********************************************************************************************************/
 
-OUTPUT_FORMAT(elf32-littlearm)                                          /*  binary file format          */
-OUTPUT_ARCH(ARM)                                                        /*  target select               */
+OUTPUT_FORMAT(elf32-powerpc)                                          /*  binary file format          */
+OUTPUT_ARCH(powerpc)                                                        /*  target select               */
 ENTRY(_start)
 
 /*********************************************************************************************************

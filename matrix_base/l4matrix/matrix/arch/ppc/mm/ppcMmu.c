@@ -293,6 +293,7 @@ static MX_PTE_TRANSENTRY  ppcMmuBuildPtentry (UINT32  uiBaseAddr,
         uiPteDescriptor.PTE_uiRPN       = uiBaseAddr >> MX_CFG_MMU_PAGE_SHIFT;
         uiPteDescriptor.PTE_ucReserved1 = ucType;
         uiPteDescriptor.PTE_bReserved2  = ucExec;
+
         break;
 
     default:

@@ -6,8 +6,9 @@
  *
 ** 描        述: INTEL 8250 UART 驱动
 *********************************************************************************************************/
-//#include <Matrix.h>
-#include "../../bsp/config.h"
+#include <Matrix.h>
+#include "../../config.h"
+#include "uart_1.h"
 /*********************************************************************************************************
   定义
 *********************************************************************************************************/
@@ -61,18 +62,18 @@ VOID  uart8250PutStr (addr_t  addrBase, CPCHAR  pcMsg)
 ** 全局变量:
 ** 调用模块:
 *********************************************************************************************************/
-VOID  uart8250PutChar (addr_t  addrBase, CHAR  cChar)
+VOID  uartPutChar (CHAR  cChar)
 {
     UINT32  uiLsr;
 
     while (1) {
-        uiLsr = read8(addrBase + UART_LSR);
+        uiLsr = read8(BSP_CFG_8250_BASE + UART_LSR);
         if (uiLsr & UART_LSR_THRE) {
             break;
         }
     }
 
-    write8(cChar, addrBase + UART_THR);
+    write8(cChar, BSP_CFG_8250_BASE + UART_THR);
 }
 /*********************************************************************************************************
 ** 函数名称: uart8250GetChar

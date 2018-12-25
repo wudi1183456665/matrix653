@@ -109,12 +109,12 @@ static  UINT32          __uiL4SyIrqs[] MX_PRTNDATA_SEC = { 0, 1 };
 /*********************************************************************************************************
   包含测试进程镜像文件 (当前路径是 matrix_bsp_imx6/l4matrix/)
 *********************************************************************************************************/
-MX_LOAD_PRTN(APP1, "../../matrix_app/l4app1/Debug/app.bin",   0x50000000, 100, __maApp1Mems, __uiApp1Irqs);
+//MX_LOAD_PRTN(APP1, "../../matrix_app/l4app1/Debug/app.bin",   0x50000000, 100, __maApp1Mems, __uiApp1Irqs);
 //MX_LOAD_PRTN(APP1, "../../matrix_app/l4app1/Release/app.bin",   0x50000000, 100, __maApp1Mems, __uiApp1Irqs);
 //MX_LOAD_PRTN(APP2, "../../matrix_app/l4app2/Release/app.bin",   0x50000000, 200, __maApp2Mems, __uiApp2Irqs);
 //MX_LOAD_PRTN(APP3, "../../matrix_app/l4app3/Debug/app.bin",   0x50000000, 201, __maApp3Mems, __uiApp3Irqs);
 //MX_LOAD_PRTN(APP4, "../../matrix_app/l4app2/Debug/app.bin",   0x50000000, 202, __maApp4Mems, __uiApp4Irqs);
-MX_LOAD_PRTN(DFWS, "../../matrix_app/l4DfewOS/Release/app.bin",   0x50000000, 102, __maAppDMems, __uiAppDIrqs);
+//MX_LOAD_PRTN(DFWS, "../../matrix_app/l4DfewOS/Release/app.bin",   0x50000000, 102, __maAppDMems, __uiAppDIrqs);
 //MX_LOAD_PRTN(APPS, "../../matrix_app/l4sylixos/Release/app.bin",  0x12000000, 101, __maAppSMems, __uiAppSIrqs);
 //MX_LOAD_PRTN(L4SY, "../../sylixos_bsp_imx6/Release/l4bspimx6.bin",0x30000000, 100, __maL4SyMems, __uiL4SyIrqs);
 /*********************************************************************************************************

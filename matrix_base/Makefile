@@ -2,7 +2,7 @@
 COMPONENTS +=  l4matrix
 COMPONENTS +=  l4api
 COMPONENTS +=  l4libc
-#COMPONENTS +=  l4libtest
+COMPONENTS +=  l4libtest
 #COMPONENTS +=  libsylixos
 
 all: $(COMPONENTS)

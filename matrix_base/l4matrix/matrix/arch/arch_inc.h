@@ -48,6 +48,7 @@
 #include "ppc/ppc_types.h"
 #include "ppc/ppc_regs.h"
 #include "ppc/ppc_elf.h"
+//#include "ppc/ppc_def.h"
 
 
 #elif defined(MX_CFG_CPU_ARCH_C6X)

@@ -33,30 +33,38 @@
 #endif
 
     EXPORT_LABEL(ppc60xICacheEnable)
-    EXPORT_LABEL(ppc60xDCacheEnable)
+    ;EXPORT_LABEL(ppc60xDCacheEnable)
+	.global ppc60xDCacheEnable
 
-    EXPORT_LABEL(ppc60xICacheDisable)
-    EXPORT_LABEL(ppc60xDCacheDisable)
+    ;EXPORT_LABEL(ppc60xICacheDisable)
+    .global ppc60xICacheDisable
 
-    EXPORT_LABEL(ppc60xICacheInvalidate)
+    ;EXPORT_LABEL(ppc60xDCacheDisable)
+	.global ppc60xDCacheDisable
+
+   ; EXPORT_LABEL(ppc60xICacheInvalidate)
+	.global ppc60xICacheInvalidate
 
     EXPORT_LABEL(ppc60xDCacheInvalidate)
     EXPORT_LABEL(ppc60xDCacheClear)
     EXPORT_LABEL(ppc60xDCacheFlush)
 
-    EXPORT_LABEL(ppc60xICacheInvalidateAll)
+    ;EXPORT_LABEL(ppc60xICacheInvalidateAll)
+	.global ppc60xICacheInvalidateAll
+   ; EXPORT_LABEL(ppc60xDCacheInvalidateAll)
+   .global  ppc60xDCacheInvalidateAll
 
-    EXPORT_LABEL(ppc60xDCacheInvalidateAll)
     EXPORT_LABEL(ppc60xDCacheFlushAll)
     EXPORT_LABEL(ppc60xDCacheClearAll)
 
     EXPORT_LABEL(ppc60xTextUpdate)
 
-    EXPORT_LABEL(ppc60xBranchPredictionDisable)
-    EXPORT_LABEL(ppc60xBranchPredictionEnable)
-    EXPORT_LABEL(ppc60xBranchPredictorInvalidate)
-
-    IMPORT_LABEL(_G_pucPpcCacheReadBuffer)
+    ;EXPORT_LABEL(ppc60xBranchPredictionDisable)
+    .global ppc60xBranchPredictionDisable
+     EXPORT_LABEL(ppc60xBranchPredictionEnable)
+    ;EXPORT_LABEL(ppc60xBranchPredictorInvalidate)
+	.global ppc60xBranchPredictorInvalidate
+     IMPORT_LABEL(_G_pucPpcCacheReadBuffer)
 
 ;/*********************************************************************************************************
 ;  ∂®“Â

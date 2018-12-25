@@ -50,8 +50,9 @@ extern int  CPU_STACK_INIT(int entry, int arg, int *stk);
 /*======================================================================
   assemble language functions declare
 ======================================================================*/
-#define CONTEXT_SWITCH()            asm volatile ("swi 7\t\n")
-#define LOAD_HIGHEST_TASK()         asm volatile ("swi 7\t\n")
+#define CONTEXT_SWITCH()            asm volatile ("\t\n")
+#define LOAD_HIGHEST_TASK()         asm volatile ("\t\n")
+
 
 extern int _G_trigger;
 

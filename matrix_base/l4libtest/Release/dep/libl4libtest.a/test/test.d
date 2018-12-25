@@ -1,16 +1,16 @@
 Release/obj/libl4libtest.a/test/test.o: test/test.c \
  ../../matrix_base/l4matrix/matrix/include/Matrix.h \
- ../../matrix_base/l4matrix/matrix/include/../config/cpu/cpu_cfg.h \
- ../../matrix_base/l4matrix/matrix/include/../config/cpu/cpu_cfg_arm.h \
- ../../matrix_base/l4matrix/matrix/include/../config/core/core_cfg.h \
- ../../matrix_base/l4matrix/matrix/include/../arch/arch_inc.h \
+ f:\matrix_653\matrix_base\l4matrix\matrix\config\cpu\cpu_cfg.h \
+ f:\matrix_653\matrix_base\l4matrix\matrix\config\cpu\cpu_cfg_ppc.h \
+ f:\matrix_653\matrix_base\l4matrix\matrix\config\core\core_cfg.h \
+ f:\matrix_653\matrix_base\l4matrix\matrix\arch\arch_inc.h \
  ../../matrix_base/l4matrix/matrix/config/cpu/cpu_cfg.h \
- ../../matrix_base/l4matrix/matrix/include/../arch/arm/arm_compiler.h \
- ../../matrix_base/l4matrix/matrix/include/../arch/arm/arm_limits.h \
- ../../matrix_base/l4matrix/matrix/include/../arch/arm/arm_types.h \
- ../../matrix_base/l4matrix/matrix/include/../arch/arm/arm_regs.h \
- ../../matrix_base/l4matrix/matrix/include/../arch/arm/arm_elf.h \
- ../../matrix_base/l4matrix/matrix/include/../list/list.h \
+ f:\matrix_653\matrix_base\l4matrix\matrix\arch\ppc/ppc_compiler.h \
+ f:\matrix_653\matrix_base\l4matrix\matrix\arch\ppc/ppc_limits.h \
+ f:\matrix_653\matrix_base\l4matrix\matrix\arch\ppc/ppc_types.h \
+ f:\matrix_653\matrix_base\l4matrix\matrix\arch\ppc/ppc_regs.h \
+ f:\matrix_653\matrix_base\l4matrix\matrix\arch\ppc/ppc_elf.h \
+ f:\matrix_653\matrix_base\l4matrix\matrix\list\list.h \
  ../../matrix_base/l4matrix/matrix/include/k_types.h \
  ../../matrix_base/l4matrix/matrix/include/k_error.h \
  ../../matrix_base/l4matrix/matrix/include/k_value.h \
@@ -27,35 +27,36 @@ Release/obj/libl4libtest.a/test/test.o: test/test.c \
  ../../matrix_base/l4matrix/matrix/include/k_priority.h \
  ../../matrix_base/l4matrix/matrix/include/k_api.h \
  ../../matrix_base/l4matrix/matrix/include/k_debug.h \
- ../../matrix_base/l4matrix/matrix/include/../arch/arch_support.h \
- ../../matrix_base/l4matrix/matrix/include/../arch/./arm/arm_support.h \
- ../../matrix_base/l4matrix/matrix/include/../arch/arch_io.h \
- ../../matrix_base/l4matrix/matrix/include/../arch/./arm/arm_io.h \
+ f:\matrix_653\matrix_base\l4matrix\matrix\arch\arch_support.h \
+ f:\matrix_653\matrix_base\l4matrix\matrix\arch\ppc\ppc_support.h \
+ f:\matrix_653\matrix_base\l4matrix\matrix\arch\ppc\mm/ppcMmu.h \
+ f:\matrix_653\matrix_base\l4matrix\matrix\arch\arch_io.h \
+ f:\matrix_653\matrix_base\l4matrix\matrix\arch\ppc\ppc_io.h \
  ../../matrix_base/l4api/api/api.h
 
 ../../matrix_base/l4matrix/matrix/include/Matrix.h:
 
-../../matrix_base/l4matrix/matrix/include/../config/cpu/cpu_cfg.h:
+f:\matrix_653\matrix_base\l4matrix\matrix\config\cpu\cpu_cfg.h:
 
-../../matrix_base/l4matrix/matrix/include/../config/cpu/cpu_cfg_arm.h:
+f:\matrix_653\matrix_base\l4matrix\matrix\config\cpu\cpu_cfg_ppc.h:
 
-../../matrix_base/l4matrix/matrix/include/../config/core/core_cfg.h:
+f:\matrix_653\matrix_base\l4matrix\matrix\config\core\core_cfg.h:
 
-../../matrix_base/l4matrix/matrix/include/../arch/arch_inc.h:
+f:\matrix_653\matrix_base\l4matrix\matrix\arch\arch_inc.h:
 
 ../../matrix_base/l4matrix/matrix/config/cpu/cpu_cfg.h:
 
-../../matrix_base/l4matrix/matrix/include/../arch/arm/arm_compiler.h:
+f:\matrix_653\matrix_base\l4matrix\matrix\arch\ppc/ppc_compiler.h:
 
-../../matrix_base/l4matrix/matrix/include/../arch/arm/arm_limits.h:
+f:\matrix_653\matrix_base\l4matrix\matrix\arch\ppc/ppc_limits.h:
 
-../../matrix_base/l4matrix/matrix/include/../arch/arm/arm_types.h:
+f:\matrix_653\matrix_base\l4matrix\matrix\arch\ppc/ppc_types.h:
 
-../../matrix_base/l4matrix/matrix/include/../arch/arm/arm_regs.h:
+f:\matrix_653\matrix_base\l4matrix\matrix\arch\ppc/ppc_regs.h:
 
-../../matrix_base/l4matrix/matrix/include/../arch/arm/arm_elf.h:
+f:\matrix_653\matrix_base\l4matrix\matrix\arch\ppc/ppc_elf.h:
 
-../../matrix_base/l4matrix/matrix/include/../list/list.h:
+f:\matrix_653\matrix_base\l4matrix\matrix\list\list.h:
 
 ../../matrix_base/l4matrix/matrix/include/k_types.h:
 
@@ -89,12 +90,14 @@ Release/obj/libl4libtest.a/test/test.o: test/test.c \
 
 ../../matrix_base/l4matrix/matrix/include/k_debug.h:
 
-../../matrix_base/l4matrix/matrix/include/../arch/arch_support.h:
+f:\matrix_653\matrix_base\l4matrix\matrix\arch\arch_support.h:
 
-../../matrix_base/l4matrix/matrix/include/../arch/./arm/arm_support.h:
+f:\matrix_653\matrix_base\l4matrix\matrix\arch\ppc\ppc_support.h:
 
-../../matrix_base/l4matrix/matrix/include/../arch/arch_io.h:
+f:\matrix_653\matrix_base\l4matrix\matrix\arch\ppc\mm/ppcMmu.h:
 
-../../matrix_base/l4matrix/matrix/include/../arch/./arm/arm_io.h:
+f:\matrix_653\matrix_base\l4matrix\matrix\arch\arch_io.h:
+
+f:\matrix_653\matrix_base\l4matrix\matrix\arch\ppc\ppc_io.h:
 
 ../../matrix_base/l4api/api/api.h:

@@ -24,7 +24,7 @@
 #endif
 
 #include "config.h"
-#include <arch/assembler.h>
+#include <arch/arch_assembler.h>
 
 #define __SYLIXOS_PPC604__                  0x604
 #define __SYLIXOS_PPCEC604__                0xEC604
@@ -32,7 +32,7 @@
 
 #define __SYLIXOS_PPC_CPU__                 __SYLIXOS_PPC604__
 #define __SYLIXOS_PPC_HAVE_ALTIVEC          1
-#include <arch/ppc/arch_604.h>
+#include <arch/ppc/mm/cache/ppc60x/arch_604.h>
 
     FILE_BEGIN()
 
@@ -55,10 +55,10 @@
     IMPORT_LABEL(ppc603DataStoreTranslationMissEntry)
     IMPORT_LABEL(archDecrementerInterruptEntry)
 
-    EXPORT_LABEL(start)                       //bsp汇编入口函数
+   // EXPORT_LABEL(start)                       //bsp汇编入口函数
+	.global start
 
-
-
+	SECTION(.text)
 ;/*********************************************************************************************************
 ;  代码入口
 ;*********************************************************************************************************/
@@ -85,66 +85,7 @@ LINE_LABEL(ppcCpuInit)
     MTSPR   SPRG3 , R3
     ISYNC
 
-    ;/*  打开 FPU */
-    XOR     R3 , R3 , R3
-    ORI     R3 , R3 , ARCH_PPC_MSR_FP
-    ISYNC
-    MTMSR   R3
-    ISYNC
 
-    ;/*  初始化 FPU 控制/状态寄存器 */
-    MTFSFI  7 , 0x0
-    MTFSFI  6 , 0x0
-    MTFSFI  5 , 0x0
-    MTFSFI  4 , 0x0
-    MTFSFI  3 , 0x0
-    MTFSFI  2 , 0x0
-    MTFSFI  1 , 0x0
-    MTFSFI  0 , 0x0
-    ISYNC
-
-    ;/*  初始化 FPU 数据寄存器 */
-    MFSPR   R3 ,  LR
-    ISYNC
-    LFS     FPR0 ,  0(R3)
-    LFS     FPR1 ,  0(R3)
-    LFS     FPR2 ,  0(R3)
-    LFS     FPR3 ,  0(R3)
-    LFS     FPR4 ,  0(R3)
-    LFS     FPR5 ,  0(R3)
-    LFS     FPR6 ,  0(R3)
-    LFS     FPR7 ,  0(R3)
-    LFS     FPR8 ,  0(R3)
-    LFS     FPR9 ,  0(R3)
-    LFS     FPR10 , 0(R3)
-    LFS     FPR11 , 0(R3)
-    LFS     FPR12 , 0(R3)
-    LFS     FPR13 , 0(R3)
-    LFS     FPR14 , 0(R3)
-    LFS     FPR15 , 0(R3)
-    LFS     FPR16 , 0(R3)
-    LFS     FPR17 , 0(R3)
-    LFS     FPR18 , 0(R3)
-    LFS     FPR19 , 0(R3)
-    LFS     FPR20 , 0(R3)
-    LFS     FPR21 , 0(R3)
-    LFS     FPR22 , 0(R3)
-    LFS     FPR23 , 0(R3)
-    LFS     FPR24 , 0(R3)
-    LFS     FPR25 , 0(R3)
-    LFS     FPR26 , 0(R3)
-    LFS     FPR27 , 0(R3)
-    LFS     FPR28 , 0(R3)
-    LFS     FPR29 , 0(R3)
-    LFS     FPR30 , 0(R3)
-    LFS     FPR31 , 0(R3)
-    SYNC
-
-    ;/*  关闭 FPU */
-    XOR     R3 , R3 , R3
-    ISYNC
-    MTMSR   R3
-    ISYNC
 
     ;/*  初始段寄存器 */
     XOR     R3 , R3 , R3
@@ -178,12 +119,6 @@ LINE_LABEL(ppcCpuInit)
     MTSPR   HID0 , R3
     ISYNC
 
-    ;/*  假造一个 Decrementer 异常处理程序 */
-    LIS     R3 , HI(ARCH_PPC_RFI_OPCODE)
-    ORI     R3 , R3 , LO(ARCH_PPC_RFI_OPCODE)                   /*  Load RFI_OPCODE to R3               */
-    XOR     R0 , R0 , R0                                        /*  R0 == 0                             */
-    STW     R3 , 0x900(R0)                                      /*  Store RFI_OPCODE at 0x00000900      */
-    SYNC
 
     ;/*  清除所有的 BAT 寄存器 */
     BL      ppcBATsClear

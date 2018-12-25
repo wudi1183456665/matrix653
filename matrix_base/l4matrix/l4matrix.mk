@@ -47,6 +47,8 @@ matrix/arch/ppc/common/ppcExc.c \
 matrix/arch/ppc/common/ppcExcAsm.S \
 matrix/arch/ppc/common/ppcLibAsm.S \
 matrix/arch/ppc/common/ppcSprAsm.S \
+matrix/arch/ppc/mpcore/ppcMpCoreAsm.S \
+matrix/arch/ppc/mpcore/ppcSpinlock.c \
 matrix/arch/ppc/mm/ppcMmu.c \
 matrix/arch/ppc/mm/ppcMmuAsm.S \
 matrix/arch/ppc/mm/ppcMmuHashPageTbl.c \
@@ -54,9 +56,8 @@ matrix/arch/ppc/mm/ppcCache.c \
 matrix/arch/ppc/mm/cache/common/ppcCache.c \
 matrix/arch/ppc/mm/cache/l2/ppcL2Cache750.c \
 matrix/arch/ppc/mm/cache/l2/ppcL2Cache750Asm.S \
-matrix/arch/ppc/mm/cache/ppc60x/ppcCache60xAsm.S \
-matrix/arch/ppc/mm/cache/ppc60x/ppcCache750.c \
-matrix/arch/ppc/mm/cache/ppc60x/ppcCache750Asm.S
+matrix/arch/ppc/mm/cache/ppc60x/ppcCache60xAsm.S 
+
 
 
 #*********************************************************************************************************

@@ -42,33 +42,47 @@
 FUNC_DEF(_start)
 
 ;/*********************************************************************************************************
-;  初始化堆栈
+;  PowerPC初始化堆栈
 ;*********************************************************************************************************/
 
-    LDR     R0 , =__stack_end                                          ;/*  栈区顶端地址                 */
-    MOV     SP, R0
+    LINE_LABEL(ppcSpInit)                               ;/*是否添加label待定1013*/
+    LIS     SP , HI(__stack_end)
+    ORI     SP , SP , LO(__stack_end)
+    SYNC
+    SUBI    SP , SP , 32                                                ;/*  开辟 C 函数栈帧             */
+
+    LIS     R4 , HI(~7)
+    ORI     R4 , R4 , LO(~7)
+    AND     SP , SP , R4                                                ;/*  向下 8 字节对齐             */
 
 ;/*********************************************************************************************************
-;  清 0 BSS 段
+;  PowerPC清 0 BSS 段
 ;*********************************************************************************************************/
 
-    MOV     R0, #0                              ;/*  get a zero                                          */
-    LDR     R1, =__bss_start                    ;/*  -> bss start                                        */
-    LDR     R2, =__bss_end                      ;/*  -> bss end                                          */
-LINE_LABEL(2)
-    CMP     R1, R2                              ;/*  check if data to clear                              */
-    STRLO   R0, [R1], #4                        ;/*  clear 4 bytes                                       */
-    BLO     2b                                  ;/*  loop until done                                     */
+    LINE_LABEL(ppcBssClear)
+    ADDIS   R4 , 0  , HI(__bss_start)
+    ORI     R4 , R4 , LO(__bss_start)
 
-    DSB
+    ADDIS   R7 , 0  , HI(__bss_end)
+    ORI     R7 , R7 , LO(__bss_end)
+
+    ADDIS   R5 , 0  , 0x0000
+
+LINE_LABEL(cont2)              ;/*附带cont2功能未知*/
+    STWX    R5 , 0 , R4
+
+    ADDI    R4 , R4 , 4
+
+    CMP     CR0, 0  , R4 , R7
+    BLE     cont2
+
+    SYNC
 
 ;/*********************************************************************************************************
-;  调用 t_main 函数
+;  PowerPC调用 t_main 函数
 ;*********************************************************************************************************/
 
-    LDR     R10, =l_main
-    MOV     LR, PC
-    BX      R10
+    BL      l_main
 
     FUNC_END()
 

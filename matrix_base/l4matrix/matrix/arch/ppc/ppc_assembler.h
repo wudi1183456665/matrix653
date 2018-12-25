@@ -12,12 +12,10 @@
 /*********************************************************************************************************
   PowerPC architecture assembly special code
 *********************************************************************************************************/
-
+//#define A(a) .global a
 #if defined(__ASSEMBLY__) || defined(ASSEMBLY)
 
 
-#define ARCH_PPC_MMU_MASK(src, des) \
-    RLWINM  des, src, 0, 28, 25
 
 /*********************************************************************************************************
   assembler define
@@ -340,6 +338,8 @@ func:
 
 #define ARCH_PPC_MSR_POWERUP        0x0040          /*  State of MSR at powerup                         */
 
+#define ARCH_PPC_MMU_MASK(src, des) \
+    RLWINM  des, src, 0, 28, 25
 
 
 #endif                                                                  /*  __ASSEMBLY__                */

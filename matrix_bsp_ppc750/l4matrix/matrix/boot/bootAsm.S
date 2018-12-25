@@ -10,11 +10,11 @@
 ;**
 ;**--------------文件信息--------------------------------------------------------------------------------
 ;**
-;** 文   件   名: bootAsm.S
+;** 文   件   名: bootAsm750.S
 ;**
-;** 创   建   人: Wang.Dongfang (王东方)
+;** 创   建   人:
 ;**
-;** 文件创建日期: 2018 年 02 月 08 日
+;** 文件创建日期: 2018 年 12 月 17 日
 ;**
 ;** 描        述: 必须使用汇编实现的功能函数.
 ;*********************************************************************************************************/
@@ -22,42 +22,56 @@
 #define ASSEMBLY 1
 #endif
 
-#include <arch/arch_assembler.h>
+#include <../arch/arch_assembler.h>
 
 ;/*********************************************************************************************************
 ;  声明外部函数和导出全局函数
 ;*********************************************************************************************************/
 
-    EXPORT_LABEL(bootArmMmuEnable)
-    EXPORT_LABEL(bootArmMmuDisable)
-    EXPORT_LABEL(bootArmMmuSetTTBase0)
-    EXPORT_LABEL(bootArmMmuSetTTBase1)
-    EXPORT_LABEL(bootArmMmuSetDomain)
-    EXPORT_LABEL(bootArmMmuV7SetTTBCR)
-    EXPORT_LABEL(bootArmMmuSetProcessId)
-    EXPORT_LABEL(bootArmMmuInvalidateTLB)
-    EXPORT_LABEL(bootArmControlFeatureDisable)
-    EXPORT_LABEL(bootArmAuxControlFeatureEnable)
-    EXPORT_LABEL(bootArmAuxControlFeatureDisable)
-    EXPORT_LABEL(bootArmDCacheV7ClearAll)
-    EXPORT_LABEL(bootArmDCacheV7InvalidateAll)
-    EXPORT_LABEL(bootArmDCacheV7Disable)
-    EXPORT_LABEL(bootArmDCacheEnable)
-    EXPORT_LABEL(bootArmICacheInvalidateAll)
-    EXPORT_LABEL(bootArmICacheDisable)
-    EXPORT_LABEL(bootArmPrivatePeriphBaseGet)
-    EXPORT_LABEL(bootArmCp15MainIdReg)
-    EXPORT_LABEL(bootArmCurCpuId)
-    EXPORT_LABEL(bootArmBranchPredictorInvalidate)
-    EXPORT_LABEL(bootArmBranchPredictionEnable)
-    EXPORT_LABEL(bootArmBranchPredictionDisable)
+    .global ppcMmuEnable
+    //EXPORT_LABEL(ppcMmuDisable)
+	.global ppcMmuDisable
+
+    .global ppcMmuInvalidateTLBNr
+    .global ppcMmuInvalidateTLBEA
+
+    .global ppcMmuSetSDR1
+    .global ppcMmuSetSR
+
+    .global ppcMmuGetSRR1
+    .global ppcMmuGetDSISR
+    .global ppcHashPageTblPteSet
+
+    .global ppc750ICacheEnable
+    .global ppc750DCacheEnable
+
+    .global ppc750ICacheDisable
+    .global ppc750DCacheDisable
+
+    .global ppc60xICacheInvalidate
+
+    .global ppc60xDCacheInvalidate
+    .global ppc60xDCacheClear
+    .global ppc60xDCacheFlush
+
+    .global ppc750ICacheInvalidateAll
+
+    .global ppc750DCacheInvalidateAll
+    .global ppc60xDCacheFlushAll
+    .global ppc60xDCacheClearAll
+
+    .global ppc750BranchPredictionDisable
+    .global ppc60xBranchPredictionEnable
+    .global ppc750BranchPredictorInvalidate
+
+    IMPORT_LABEL(G_pucPpcCacheReadBuffer)
 
 ;/*********************************************************************************************************
 ;  Section .boot.text, This Matrix boot time used code
 ;*********************************************************************************************************/
 
     //FILE_BEGIN()
-    .code 32
+    //.code 32
     .section .boot.text, "ax"
     .balign 8;
 
@@ -65,424 +79,678 @@
 ;  使能 MMU
 ;*********************************************************************************************************/
 
-FUNC_DEF(bootArmMmuEnable)
-    ARM_DSB()
-    ARM_ISB()
-    MRC     p15, 0, R0, c1, c0, 0
-    ORR     R0, R0, #P15_R1_M
-    MCR     p15, 0, R0, c1, c0, 0
-    ARM_DSB()
-    ARM_ISB()
-    BX      LR
+FUNC_DEF(ppcMmuEnable)
+    MFMSR   R3
+    ISYNC
+    ORI     R3 , R3 , ARCH_PPC_MSR_DR | ARCH_PPC_MSR_IR
+    ISYNC
+    MTMSR   R3
+    ISYNC
+    BLR
     FUNC_END()
 
 ;/*********************************************************************************************************
 ;  禁能 MMU
 ;*********************************************************************************************************/
-FUNC_DEF(bootArmMmuDisable)
-    ARM_DSB()
-    ARM_ISB()
-    MRC     p15, 0, R0, c1, c0, 0
-    BIC     R0, R0, #P15_R1_M
-    MCR     p15, 0, R0, c1, c0, 0
-    ARM_DSB()
-    ARM_ISB()
-    BX      LR
-    FUNC_END()
-
-
-;/*********************************************************************************************************
-;  设置页表基地址 TTBR0 为进程相关页表  TTBR1 为系统全局页表
-;*********************************************************************************************************/
-
-FUNC_DEF(bootArmMmuSetTTBase0)
-    ARM_DSB()
-    ARM_ISB()
-    MCR     p15, 0, R0, c2, c0, 0                                       ;/* Set TT Base                  */
-
-    MOV     R0, #0
-    ;/* SMP_UP_CHECK(R1) */
-    MCRHI   p15, 0, R0, c7, c1, 6                                       ;/* BPIALLIS SMP                 */
-    MCRLS   p15, 0, R0, c7, c5, 6                                       ;/* BPIALL UP                    */
-    ARM_NOP(R0)                                                         ;/* 3 * NOP                      */
-    ARM_NOP(R0)
-    ARM_NOP(R0)
-    ARM_DSB()
-    ARM_ISB()
-    BX      LR
-    FUNC_END()
-    
-FUNC_DEF(bootArmMmuSetTTBase1)
-    ARM_DSB()
-    ARM_ISB()
-    MCR     p15, 0, R0, c2, c0, 1
-
-    MOV     R0, #0
-    ;/* SMP_UP_CHECK(R1) */
-    MCRHI   p15, 0, R0, c7, c1, 6                                       ;/* BPIALLIS SMP                 */
-    MCRLS   p15, 0, R0, c7, c5, 6                                       ;/* BPIALL UP                    */
-    ARM_NOP(R0)                                                         ;/* 3 * NOP                      */
-    ARM_NOP(R0)
-    ARM_NOP(R0)
-    ARM_DSB()
-    ARM_ISB()
-    BX      LR
+FUNC_DEF(ppcMmuDisable)
+    MFMSR   R3
+    ISYNC
+    ARCH_PPC_MMU_MASK(R3 , R3)
+    ISYNC
+    MTMSR   R3
+    ISYNC
+    BLR
     FUNC_END()
 
 ;/*********************************************************************************************************
-;  设置域属性
+;  无效所有TLB
 ;*********************************************************************************************************/
 
-FUNC_DEF(bootArmMmuSetDomain)
-    MCR     p15, 0, R0, c3, c0, 0
-    BX      LR
+FUNC_DEF(ppcMmuInvalidateTLBNr)
+    ISYNC
+    MTCTR   R3                                                          ;/*  CTR = R3                    */
+    XOR     R4 , R4 , R4                                                ;/*  R4 = 0                      */
+
+LINE_LABEL(tlbloop)
+    ISYNC
+    TLBIE   R4
+    EIEIO
+    TLBSYNC
+    SYNC
+    ADDI    R4 , R4 , 0x1000                                            ;/*  Increment bits 15-19        */
+    BDNZ    tlbloop                                                     ;/*  Dec CTR, branch if CTR != 0 */
+    BLR
     FUNC_END()
 
 ;/*********************************************************************************************************
-;  This API set TTBCR register
+;  无效指定 EA 的 TLB
 ;*********************************************************************************************************/
 
-FUNC_DEF(bootArmMmuV7SetTTBCR)
-    MCR     p15, 0, R0, c2, c0, 2
-    BX      LR
-    FUNC_END()
-    
-;/*********************************************************************************************************
-;  设置进程 ID
-;*********************************************************************************************************/
-
-FUNC_DEF(bootArmMmuSetProcessId)
-    MCR     p15, 0, R0, c13, c0, 0
-    BX      LR
+FUNC_DEF(ppcMmuInvalidateTLBEA)
+    SYNC
+    TLBIE   R3
+    EIEIO
+    TLBSYNC
+    SYNC
+    BLR
     FUNC_END()
 
 ;/*********************************************************************************************************
-;  TLB 相关操作
+;  设置 PTE，并无效 TLB
+;  VOID  ppcHashPageTblPteSet(PTE    *pPte,
+;                             UINT32  uiWord0,
+;                             UINT32  uiWord1,
+;                             UINT32  uiEffectiveAddr);
 ;*********************************************************************************************************/
 
-FUNC_DEF(bootArmMmuInvalidateTLB)                                           ;/* 快表中的所有项无效           */
-    ARM_DSB()
-    ARM_ISB()
-    MOV     R0, #0
-    /*SMP_UP_CHECK(R1)*/
-    MCRHI   p15, 0, R0, c8, c3, 0                                       ;/* TLBIALLIS SMP                */
-    MCRLS   p15, 0, R0, c8, c7, 0                                       ;/* TLBIALL UP                   */
-    MCRHI   p15, 0, R0, c7, c1, 6                                       ;/* BPIALLIS SMP                 */
-    MCRLS   p15, 0, R0, c7, c5, 6                                       ;/* BPIALL UP                    */
-    MCR     p15, 0, R0, c7, c5, 6                                       ;/* BPIALL UP                    */
-    ARM_NOP(R0)                                                         ;/* 3 * NOP                      */
-    ARM_NOP(R0)
-    ARM_NOP(R0)
-    ARM_DSB()
-    ARM_ISB()
-    BX      LR
-    FUNC_END()    
-
-;/*********************************************************************************************************
-;  This API Disables specified features in CP15 control register
-;  R0 - features   Features to disable in Coprocessor 15 control register.
-;                  'features' can take any OR a combination of the below values.
-;                  CP15_CONTROL_TEXREMAP - TEX remap flag
-;                  CP15_CONTROL_ACCESSFLAG - Access flag Control
-;                  CP15_CONTROL_ALIGN_CHCK - Alignment Fault Checking
-;                  CP15_CONTROL_MMU - To enable MMU
-;
-;  Note: Other fields of the CP15 c1 control register are not given here
-;        as they are not of importance for StarterWare. However, optionally
-;        they can also be ADDed.
-;*********************************************************************************************************/
-
-FUNC_DEF(bootArmControlFeatureDisable)
-    ARM_DSB()
-    ARM_ISB()
-    MRC     p15, 0, R1, c1, c0, 0
-    BIC     R0, R1, R0
-    MCR     p15, 0, R0, c1, c0, 0
-    ARM_DSB()
-    ARM_ISB()
-    BX      LR
+FUNC_DEF(ppcHashPageTblPteSet)
+    SYNC
+    STW     R5, 4(R3)
+    EIEIO
+    STW     R4, 0(R3)
+    SYNC
+    TLBIE   R6
+    EIEIO
+    TLBSYNC
+    SYNC
+    BLR
     FUNC_END()
 
 ;/*********************************************************************************************************
-;  This API Sets the specified fields in Auxiliary Control Register
-;  R0 - Bit Mask for the bits to be set in Auxiliary Control Register
+;  设置 SDR1 寄存器
 ;*********************************************************************************************************/
 
-FUNC_DEF(bootArmAuxControlFeatureEnable)
-    ARM_DSB()
-    ARM_ISB()
-    MRC     p15, 0, R1, c1, c0, 1
-    ORR     R0,  R0, R1
-    MCR     p15, 0, R0, c1, c0, 1
-    ARM_DSB()
-    ARM_ISB()
-    BX      LR
+FUNC_DEF(ppcMmuSetSDR1)
+    SYNC
+    MTSPR   SDR1 , R3
+    ISYNC
+    BLR
     FUNC_END()
 
 ;/*********************************************************************************************************
-;  This API Clears the specified fields in Auxiliary Control Register
-;  R0 - Bit Mask for the bits to be cleared in Auxiliary Control Register
+;  设置段寄存器
+;  VOID  ppcMmuSetSR(UINT32  uiSRn, UINT32  uiValue);
 ;*********************************************************************************************************/
 
-FUNC_DEF(bootArmAuxControlFeatureDisable)
-    ARM_DSB()
-    ARM_ISB()
-    MRC     p15, 0, R1, c1, c0, 1
-    BIC     R0,  R1, R0
-    MCR     p15, 0, R0, c1, c0, 1
-    ARM_DSB()
-    ARM_ISB()
-    BX      LR
+FUNC_DEF(ppcMmuSetSR)
+    SYNC
+    RLWINM  R3 , R3 , 28 , 0 , 3
+    ISYNC
+    MTSRIN  R4 , R3
+    ISYNC
+    BLR
     FUNC_END()
 
 ;/*********************************************************************************************************
-;  ARMv7 CLIDR 寄存器 level shift & mask
+;  获得 SRR1 寄存器
 ;*********************************************************************************************************/
 
-#define LoUIS_MASK      0x00e00000
-#define LoUIS_SHIFT     20
-#define LoC_MASK        0x07000000
-#define LoC_SHIFT       23
-#define LoUU_MASK       0x38000000
-#define LoUU_SHIFT      26
-
-;/*********************************************************************************************************
-;  ARMv7 DCACHE 操作宏
-;*********************************************************************************************************/
-
-#define _FLD_MAX_WAY    0x3ff
-#define _FLD_MAX_IDX    0x7fff
-
-MACRO_DEF(armDCacheV7Op Op CRm LoXM LoXS)
-    STMFD   SP!, {R4-R11}
-    ARM_DMB()
-    MRC     p15, 1, R0, c0, c0, 1                                       ;/* Read CLID register           */
-    ANDS    R3, R0, #\LoXM                                              ;/* Get Level of Coherency       */
-    MOV     R3, R3, LSR #\LoXS
-    BEQ     finished\Op
-    MOV     R10, #0
-
-LINE_LABEL(loop1\Op)
-    ADD     R2, R10, R10, LSR #1
-    MOV     R1, R0, LSR R2
-    AND     R1, R1, #7
-    CMP     R1, #2
-    BLT     skip\Op
-    MCR     p15, 2, R10, c0, c0, 0
-    ARM_ISB()
-    MRC     p15, 1, R1, c0, c0, 0
-    AND     R2, R1, #7
-    ADD     R2, R2, #4
-    LDR     R4, =_FLD_MAX_WAY
-    ANDS    R4, R4, R1, LSR #3
-    CLZ     R5, R4
-    LDR     R7, =_FLD_MAX_IDX
-    ANDS    R7, R7, R1, LSR #13
-
-LINE_LABEL(loop2\Op)
-    MOV     R9, R4
-
-LINE_LABEL(loop3\Op)
-    ORR     R11, R10, R9, LSL R5
-    ORR     R11, R11, R7, LSL R2
-    MCR     p15, 0, R11, c7, \CRm, 2
-    SUBS    R9, R9, #1
-    BGE     loop3\Op
-    SUBS    R7, R7, #1
-    BGE     loop2\Op
-
-LINE_LABEL(skip\Op)
-    ADD     R10, R10, #2
-    CMP     R3, R10
-    BGT     loop1\Op
-
-LINE_LABEL(finished\Op)
-    MOV     R10, #0                                                     ;/*  swith back to cache lvl 0   */
-    MCR     p15, 2, R10, c0, c0, 0                                      ;/*  select cache lvl in csselr  */
-
-    ARM_DSB()
-    ARM_ISB()
-    LDMFD   SP!, {R4-R11}
-    BX      LR
-    MACRO_END()
-
-;/*********************************************************************************************************
-;  ARMv7 关闭 DCACHE
-;*********************************************************************************************************/
-
-FUNC_DEF(bootArmDCacheV7Disable)
-    MRC     p15, 0, R0, c1, c0, 0
-    AND     R0, R0, #P15_R1_C
-    CMP     R0, #0
-    BEQ     dcache_not_en
-
-    STMFD   SP!, {LR}
-    BL      bootArmDCacheV7ClearAll
-    LDMFD   SP!, {LR}
-    
-    ARM_DSB()
-    ARM_ISB()
-    
-    MRC     p15, 0, R0, c1, c0, 0
-    BIC     R0, R0, #P15_R1_C
-    MCR     p15, 0, R0, c1, c0, 0
-    BX      LR
-	
-LINE_LABEL(dcache_not_en)
-    STMFD   SP!, {LR}
-    BL      bootArmDCacheV7InvalidateAll
-    LDMFD   SP!, {LR}
-    BX      LR
+FUNC_DEF(ppcMmuGetSRR1)
+    MFSPR   R3 , SRR1
+    ISYNC
+    BLR
     FUNC_END()
 
 ;/*********************************************************************************************************
-;  ARMv7 回写并无效 DCACHE
+;  获得 DSISR 寄存器
 ;*********************************************************************************************************/
 
-FUNC_DEF(bootArmDCacheV7ClearAll)
-    armDCacheV7Op   ClearAll            c14     LoC_MASK    LoC_SHIFT
+FUNC_DEF(ppcMmuGetDSISR)
+    MFSPR   R3 , DSISR
+    ISYNC
+    BLR
     FUNC_END()
 
+    FILE_END()
+
 ;/*********************************************************************************************************
-;  ARMv7 无效 DCACHE
+;  定义
 ;*********************************************************************************************************/
 
-FUNC_DEF(bootArmDCacheV7InvalidateAll)
-    armDCacheV7Op   InvalidateAll       c6      LoC_MASK    LoC_SHIFT
+#define PPC_PAGE_ALIGN_SIZE         4096
+#define PPC_PAGE_ALIGN_SHIFT        12              /*  Page size == 2**12                              */
+
+#if (__SYLIXOS_PPC_CPU__ == __SYLIXOS_PPC604__)
+#define PPC_DCACHE_SIZE             32768
+#else
+#ifdef __SYLIXOS_PPC83XX__
+#define PPC_DCACHE_SIZE             (16384 * 3)     /*  32K cache plus need to flush 3/2 times          */
+#else
+#define PPC_DCACHE_SIZE             16384
+#endif
+#endif  /* __SYLIXOS_PPC_CPU__ == __SYLIXOS_PPC604__ */
+
+#define PPC_CACHE_BLOCK_SIZE        ARCH_PPC_CACHE_ALIGN_SIZE
+
+#define PPC_CACHE_OP_DISABLE        0
+#define PPC_CACHE_OP_CLEAR_ALL      1
+#define PPC_CACHE_OP_STORE_ALL      2
+#define PPC_CACHE_OP_INVALID_ALL    3
+
+    FILE_BEGIN()
+
+;/*********************************************************************************************************
+;  使能 ICACHE
+;*********************************************************************************************************/
+
+FUNC_DEF(ppc60xICacheEnable)
+
+    MFSPR   R4 , HID0
+
+    ;/* enable and invalidate the Instruction cache */
+
+    ANDI.   R5 , R4 , ARCH_PPC_HID0_ICE             ;/*  if insn cache already                           */
+    BNE     cache60xRetOK                           ;/*  enabled just return OK                          */
+
+    ORI     R4 , R4 , ARCH_PPC_HID0_ICE | ARCH_PPC_HID0_ICFI
+
+#if ((__SYLIXOS_PPC_CPU__ == __SYLIXOS_PPC603__) || (__SYLIXOS_PPC_CPU__ == __SYLIXOS_PPCEC603__))
+    RLWINM  R5 , R4 , 0 , ARCH_PPC_HID0_BIT_ICFI + 1 , ARCH_PPC_HID0_BIT_ICFI - 1
+#endif
+
+    ;/*
+     ;* The setting of the instruction cache enable (ICE) bit must be
+     ;* preceded by an isync instruction to prevent the cache from being
+     ;* enabled or disabled while an instruction access is in progress.
+     ;* XXX TPR to verify.
+     ;*/
+
+    ISYNC                                           ;/*  Synchronize for ICE enable                      */
+    MTSPR   HID0 , R4                               ;/*  Enable Instr Cache & Inval cache                */
+#if ((__SYLIXOS_PPC_CPU__ == __SYLIXOS_PPC603__) || (__SYLIXOS_PPC_CPU__ == __SYLIXOS_PPCEC603__))
+    MTSPR   HID0 , R5                               ;/*  using 2 consec instructions                     */
+    ISYNC                                           ;/*  PPC603 recommendation                           */
+#else
+#ifdef __SYLIXOS_PPC745X__
+    ISYNC                                           ;/*  must immediately follow mtspr HID0              */
+#else       /* __SYLIXOS_PPC745X__ */
+    SYNC                                            ;/*  sync here makes no sense, but isync
+                                                     ;*  does not seem to work properly on
+                                                     ;*  any of 604e, 750CX, 750FX, 7400.
+                                                     ;*  See also SPR 8976.
+                                                     ;*                                                  */
+#endif      /* __SYLIXOS_PPC745X__ */
+#endif
+
+    B       cache60xRetOK                           ;/*  return OK                                       */
+
     FUNC_END()
 
 ;/*********************************************************************************************************
 ;  使能 DCACHE
 ;*********************************************************************************************************/
 
-FUNC_DEF(bootArmDCacheEnable)
-    MRC     p15, 0, R0, c1, c0, 0
-    ORR     R0, R0, #P15_R1_C
-    MCR     p15, 0, R0, c1, c0, 0
-    BX      LR
-    FUNC_END() 
+FUNC_DEF(ppc750DCacheEnable)
+    MFSPR   R4 , HID0
 
-;/*********************************************************************************************************
-;  无效整个 ICACHE
-;*********************************************************************************************************/
+    ANDI.   R5 , R4 , ARCH_PPC_HID0_DCE             ;/*  if data cache already enabled                   */
+    BNE     cache60xRetOK                           ;/*  then exit with OK                               */
 
-FUNC_DEF(bootArmICacheInvalidateAll)
-    ARM_DSB()
-    ARM_ISB()
-    MOV     R0, #0
-    /*SMP_UP_CHECK(R1)*/
-    MCRHI   p15, 0, R0, c7, c1, 0                                       ;/* ICIALLUIS SMP                */
-    MCRLS   p15, 0, R0, c7, c5, 0                                       ;/* ICIALLU UP                   */
-    MCRHI   p15, 0, R0, c7, c1, 6                                       ;/* BPIALLIS SMP                 */
-    MCRLS   p15, 0, R0, c7, c5, 6                                       ;/* BPIALL UP                    */
-    ARM_NOP(R0)                                                         ;/* 3 * NOP                      */
-    ARM_NOP(R0)
-    ARM_NOP(R0)
-    ARM_DSB()
-    ARM_ISB()
-    BX      LR
+    ORI     R4 , R4 , ARCH_PPC_HID0_DCE | ARCH_PPC_HID0_DCFI;/*  set DCE & DCFI bit                      */
+
+#if ((__SYLIXOS_PPC_CPU__ == __SYLIXOS_PPC603__) || (__SYLIXOS_PPC_CPU__ == __SYLIXOS_PPCEC603__))
+    RLWINM  R5 , R4 , 0 , ARCH_PPC_HID0_BIT_DCFI + 1 , ARCH_PPC_HID0_BIT_DCFI - 1
+#endif
+
+    ;/*
+     ;* The setting of the data cache enable (DCE) bit must be
+     ;* preceded by a sync instruction to prevent the cache from
+     ;* being enabled or disabled during a data access.
+     ;*/
+
+#ifdef __SYLIXOS_PPC745X__
+    DSSALL
+#endif      /* __SYLIXOS_PPC745X__ */
+    SYNC                                            ;/*  Synchronize for DCE enable                      */
+    MTSPR   HID0 , R4                               ;/*  Enable Data Cache & Inval cache                 */
+#if ((__SYLIXOS_PPC_CPU__ == __SYLIXOS_PPC603__) || (__SYLIXOS_PPC_CPU__ == __SYLIXOS_PPCEC603__))
+    MTSPR   HID0 , R5                               ;/*  using 2 consecutive instructions                */
+                                                    ;/*  PPC603 recommendation                           */
+#endif
+    SYNC
+#ifdef __SYLIXOS_PPC745X__
+    ISYNC
+#endif      /* __SYLIXOS_PPC745X__ */
+
+    B       cache60xRetOK                           ;/*  return OK                                       */
+
     FUNC_END()
 
 ;/*********************************************************************************************************
 ;  禁能 ICACHE
 ;*********************************************************************************************************/
 
-FUNC_DEF(bootArmICacheDisable)
-    MRC     p15, 0, R0, c1, c0, 0
-    AND     R0, R0, #P15_R1_I
-    CMP     R0, #0
-    BEQ     icache_not_en
-    
-    MRC     p15, 0, R0, c1, c0, 0
-    BIC     R0, R0, #P15_R1_I
-    MCR     p15, 0, R0, c1, c0, 0
+FUNC_DEF(ppc60xICacheDisable)
 
-LINE_LABEL(icache_not_en)
-    BX      LR
+    MFSPR   R4 , HID0
+
+    ;/* disable instruction cache */
+    RLWINM. R5 , R4 , 0 , ARCH_PPC_HID0_BIT_ICE , ARCH_PPC_HID0_BIT_ICE
+    BEQ     cache60xRetOK                           ;/*  return OK if cache already off                  */
+
+#if ((__SYLIXOS_PPC_CPU__ == __SYLIXOS_PPC603__) || (__SYLIXOS_PPC_CPU__ == __SYLIXOS_PPCEC603__))
+    RLWINM  R4 , R4 , 0 , ARCH_PPC_HID0_BIT_ICFI + 1 , ARCH_PPC_HID0_BIT_ICFI - 1
+    RLWINM  R4 , R4 , 0 , ARCH_PPC_HID0_BIT_ICE  + 1 , ARCH_PPC_HID0_BIT_ICE  - 1
+#else
+    ORI     R5 , R4 , ARCH_PPC_HID0_ICFI
+    RLWINM  R4 , R5 , 0 , ARCH_PPC_HID0_BIT_ICE + 1 , ARCH_PPC_HID0_BIT_ICE - 1
+                                                    ;/*  but leave ARCH_PPC_HID0_ICFI on                 */
+#endif
+
+    ISYNC                                           ;/*  Synchronize for ICE disable                     */
+#if ((__SYLIXOS_PPC_CPU__ != __SYLIXOS_PPC603__) && (__SYLIXOS_PPC_CPU__ != __SYLIXOS_PPCEC603__))
+    MTSPR   HID0 , R5                               ;/*  Invalidate Instr Cache                          */
+#ifdef  __SYLIXOS_PPC745X__
+    ISYNC
+#endif      /* __SYLIXOS_PPC745X__ */
+#endif
+    MTSPR   HID0 , R4                               ;/*  using 2 consec instructions                     */
+    ISYNC                                           ;/*  PPC603 recommendation                           */
+#if ((__SYLIXOS_PPC_CPU__ == __SYLIXOS_PPC604__) && !defined(__SYLIXOS_PPC745X__))
+    SYNC                                            ;/*  It makes no sense for sync to be
+                                                     ;*  needed here, and it is not required
+                                                     ;*  for 745x per the User's Manual, but
+                                                     ;*  isync alone does not seem to work
+                                                     ;*  properly on any of 604e, 750CX,
+                                                     ;*  750FX, 7400.  See also SPR 8976.
+                                                     ;*                                                  */
+#endif      /* __SYLIXOS_PPC604__ && !__SYLIXOS_PPC745X__ */
+
+    B       cache60xRetOK                           ;/*  return OK                                       */
+
     FUNC_END()
 
 ;/*********************************************************************************************************
-;  In Cortex-A9 or later uniprocessor implementations the base address is set to zero.
-;  In Cortex-A9 or later MPCore implementations, the base address is reset to PERIPHBASE[31:13]
-;  so that software can determine the location of the private memory region.
+;  禁能 DCACHE
 ;*********************************************************************************************************/
 
-FUNC_DEF(bootArmPrivatePeriphBaseGet)
-    MRC     p15, 4, R0, c15, c0, 0
-    BX      LR
+FUNC_DEF(ppc60xDCacheDisable)
+    LI      R8 , PPC_CACHE_OP_DISABLE
+    B       ppc60xDCacheAllOps
     FUNC_END()
 
 ;/*********************************************************************************************************
-;  获得 CP15 基本信息
+;  D-CACHE 所有数据回写并无效
 ;*********************************************************************************************************/
 
-FUNC_DEF(bootArmCp15MainIdReg)
-    MRC     p15, 0, R0, c0, c0, 0
-    BX      LR
+FUNC_DEF(ppc60xDCacheClearAll)
+    LI      R8 , PPC_CACHE_OP_CLEAR_ALL
+    B       ppc60xDCacheAllOps
     FUNC_END()
 
 ;/*********************************************************************************************************
-;  获得当前核 ID ARMv6/v7
+;  D-CACHE 所有数据回写
 ;*********************************************************************************************************/
 
-FUNC_DEF(bootArmCurCpuId)
-    MRC     p15, 0, R0, c0, c0, 5
-    AND     R0, R0, #0x03
-    BX      LR
+FUNC_DEF(ppc60xDCacheFlushAll)
+    LI      R8 , PPC_CACHE_OP_STORE_ALL
+    B       ppc60xDCacheAllOps
     FUNC_END()
 
 ;/*********************************************************************************************************
-;  分支预测操作
+;  D-CACHE 所有数据无效
 ;*********************************************************************************************************/
+
+FUNC_DEF(ppc60xDCacheInvalidateAll)
+    LI      R8 , PPC_CACHE_OP_INVALID_ALL
+
 ;/*********************************************************************************************************
-;  This API invalidates the branch predictor
+;  D-CACHE 所有数据操作
 ;*********************************************************************************************************/
 
-FUNC_DEF(bootArmBranchPredictorInvalidate)
-    ARM_DSB()
-    ARM_ISB()
-    MOV     R0, #0
-    /*SMP_UP_CHECK(R1)*/
-    MCRHI   p15, 0, R0, c7, c1, 6                                       ;/* BPIALLIS SMP                 */
-    MCRLS   p15, 0, R0, c7, c5, 6                                       ;/* BPIALL UP                    */
+FUNC_DEF(ppc60xDCacheAllOps)
+    MFSPR   R4 , HID0
 
-    ARM_NOP(R0)                                                         ;/* 3 * NOP                      */
-    ARM_NOP(R0)
-    ARM_NOP(R0)
-    ARM_DSB()
-    ARM_ISB()
-    BX      LR
+    ;/* if cache already disabled, just return OK */
+
+    RLWINM. R5 , R4 , 0 , ARCH_PPC_HID0_BIT_DCE , ARCH_PPC_HID0_BIT_DCE
+    BEQ     cache60xRetOK
+
+    ;/* "invalidate all" skips over loops */
+    CMPWI   R8 , PPC_CACHE_OP_INVALID_ALL
+    BEQ     cache60xInvalidateD
+
+#if (__SYLIXOS_PPC_CPU__ == __SYLIXOS_PPC604__)
+    ;/* set up cache line count in R6:  32KB => 1024 */
+    LI      R6 , PPC_DCACHE_SIZE / PPC_CACHE_BLOCK_SIZE
+
+    MFSPR   R5 , PVR
+    RLWINM  R5 , R5 , 16 , 16 , 31                  ;/*  extract MS half of PVR                          */
+
+    ;/* All 744x/745x/8641 fall through to cache60xDataDisableLTLB */
+#ifndef  __SYLIXOS_PPC745X__
+#ifdef ARCH_PPC604_USE_DCFA
+    ;/*
+     ;* Recognize processors which implement HID0[DCFA], which enables the
+     ;* 8-way PLRU cache to be flushed by loading one cache worth of data.
+     ;*/
+    CMPLWI  R5 , ARCH_PPC_PVR_PPC750_U
+    BEQ     cache60xDataDisableDCFA
+
+    CMPLWI  R5 , ARCH_PPC_PVR_PPC750FX_0_U          ;/*  lowest PPC750FX                                 */
+    BEQ     cache60xDataDisableDCFA
+
+    BLT     notPPC750FX
+    CMPLWI  R5 , ARCH_PPC_PVR_PPC750FX_f_U          ;/*  highest PPC750FX                                */
+    BLE     cache60xDataDisableDCFA
+LINE_LABEL(notPPC750FX)
+    CMPLWI  R5 , ARCH_PPC_PVR_MPC755_U
+    BEQ     cache60xDataDisableDCFA
+
+    CMPLWI  R5 , ARCH_PPC_PVR_MPC745_U
+    BEQ     cache60xDataDisableDCFA
+#endif      /* ARCH_PPC604_USE_DCFA */
+
+    ;/*
+     ;* Recognize processors which implement true LRU, or modified PLRU.
+     ;* These caches also require loading only one cache worth of data,
+     ;* but there is no DCFA bit to manage.
+     ;*/
+    CMPLWI  R5 , ARCH_PPC_PVR_PPC604E_U
+    BEQ     cache60xDataDisableLTLB
+
+    CMPLWI  R5 , ARCH_PPC_PVR_PPC604R_U
+    BEQ     cache60xDataDisableLTLB
+
+    CMPLWI  R5 , ARCH_PPC_PVR_PPC604_U
+    BEQ     cache60xDataDisableLTLB
+
+    ;/*
+     ;* Remaining cases are 7400/7410, and unrecognized PVR (including DCFA
+     ;* processors if USE_DCFA is not selected).  7400/7410 h/w flush will
+     ;* not use the count value in R6; assume others have a 750-style PLRU
+     ;* cache.  To cover optimized replacement which uses invalid lines
+     ;* first, 7xx manuals say count must be 1.5 * total # of lines in
+     ;* cache:  32KB => 1536.
+     ;*/
+    LI      R6 , (3 * PPC_DCACHE_SIZE) / (2 * PPC_CACHE_BLOCK_SIZE)
+
+    RLWINM  R5 , R5 , 0 , 17 , 31                   ;/*  mask off bit 0x8000                             */
+    CMPLWI  R5 , ARCH_PPC_PVR_MPC7400_U             ;/*  MPC7400 or MPC7410                              */
+    BNE     cache60xDataDisableLTLB
+
+    ;/*
+     ;* Since 7400/7410 h/w flush invalidates the cache, don't use it if
+     ;* only a "store" was requested.  These processors also support DCFA,
+     ;* so use it if selected -- after re-establishing the proper R6 value.
+     ;*/
+    CMPWI   R8 , PPC_CACHE_OP_STORE_ALL
+
+#ifdef ARCH_PPC604_USE_DCFA
+    LI      R6 , PPC_DCACHE_SIZE / PPC_CACHE_BLOCK_SIZE
+    BEQ     cache60xDataDisableDCFA
+#else       /* ARCH_PPC604_USE_DCFA */
+    BEQ     cache60xDataDisableLTLB
+#endif      /* ARCH_PPC604_USE_DCFA */
+
+    ;/*
+     ;* 7400 and 7410 (but not 744x or 745x) have a hardware L1 flush.
+     ;* Code sequence described in sec. 3.5.2 "Data Cache Hardware Flush
+     ;* Parameter in MSSCR0" of the MPC7400 and MPC7410 User's Manuals.
+     ;*/
+
+    .long   0x7e00066c                              ;/*  dssall                                          */
+    SYNC
+    MFSPR   R5 , MSSCR0
+    ORIS    R5 , R5 , ARCH_PPC_MSSCR0_DL1HWF_U
+    MTSPR   MSSCR0 , R5
+LINE_LABEL(waitForL1Hw)
+    MFSPR   R5 , MSSCR0
+    RLWINM. R5 , R5 , 0 , ARCH_PPC_MSSCR0_BIT_DL1HWF , ARCH_PPC_MSSCR0_BIT_DL1HWF
+    BNE     waitForL1Hw
+    SYNC
+    B       cache60xInvalidateD                     ;/*  DCFI unneeded, but harmless                     */
+
+#ifdef ARCH_PPC604_USE_DCFA
+LINE_LABEL(cache60xDataDisableDCFA)
+    ;/*
+     ;* Set HID0[DCFA] for 7xx.  R4 already contains HID0, and interrupts
+     ;* are already disabled.  This is the officially recommended method
+     ;* for all 7xx.
+     ;*/
+    ORI     R5 , R4 , ARCH_PPC_HID0_DCFA
+    MTSPR   HID0 , R5
+#endif      /* ARCH_PPC604_USE_DCFA */
+#endif      /* __SYLIXOS_PPC745X__ */
+
+LINE_LABEL(cache60xDataDisableLTLB)
+    ;/*
+     ;* Interrupts have been disabled, and HID0[DCFA] has been set if
+     ;* required.  Former contents of MSR and HID0 are in R3 and R4
+     ;* respectively, and will be restored even if unchanged.  This also
+     ;* works for 7450 since its PLRU always acts as if DCFA were set.
+     ;*/
+
+#else       /* __SYLIXOS_PPC604__ */
+    ;/*
+     ;* All supported __SYLIXOS_PPCEC603__ (incl MPC82xx) have 16KB or smaller DCache,
+     ;* and no DCFA or hardware flush facility.
+     ;*/
+    LI      R6 , PPC_DCACHE_SIZE / PPC_CACHE_BLOCK_SIZE   ;/*  16KB => 512                               */
+#endif      /* __SYLIXOS_PPC604__ */
+
+    ;/*
+     ;* R6 contains the count of cache lines to be fetched & flushed.
+     ;* Convert to a count of pages covered, and fetch a word from
+     ;* each page to ensure that all addresses involved are in
+     ;* the TLB so that reloads do not disrupt the flush loop.
+     ;* A simple shift without round-up is sufficient because
+     ;* the R6 value is always a multiple of the shift count.
+     ;*/
+    SRWI    R5 , R6 , PPC_PAGE_ALIGN_SHIFT - ARCH_PPC_CACHE_ALIGN_SHIFT
+    MTSPR   CTR , R5
+    LIS     R9 , HIADJ(G_pucPpcCacheReadBuffer)
+    LWZ     R9 , LO(G_pucPpcCacheReadBuffer)(R9)
+    SUBI    R5 , R9 , PPC_PAGE_ALIGN_SIZE
+
+    ;/*
+     ;* There might be a page boundary between here and the end of
+     ;* the function, so make sure both pages are in the I-TLB.
+     ;*/
+    B       cache60xDisableLoadItlb
+LINE_LABEL(cache60xDisableLoadDtlb)
+    LBZU    R7 , PPC_PAGE_ALIGN_SIZE(R5)
+    BDNZ    cache60xDisableLoadDtlb
+    SYNC                                            ;/*  ensure loads, hence TLB loads, complete         */
+
+    ;/*
+     ;* Now load up the cache from the buffer
+     ;*/
+    MTSPR   CTR , R6                                ;/*  load CTR with the count of cache lines          */
+
+    ;/* load up R5 with the buffer address minus one cache block size */
+    SUBI    R5 , R9 , PPC_CACHE_BLOCK_SIZE
+
+LINE_LABEL(cache60xDisableLoad)
+    LBZU    R7 , PPC_CACHE_BLOCK_SIZE(R5)           ;/*  cast out old line if modified                   */
+    BDNZ    cache60xDisableLoad                     ;/*  repeat for all sets and ways                    */
+    SYNC                                            ;/*  ensure loads complete                           */
+
+    MTSPR   CTR , R6                                ;/*  reload CTR; base still in R9                    */
+
+    ;/*
+     ;* All modified lines not in the buffer range have been cast out,
+     ;* but any within the range would not have been affected by the
+     ;* above (load) loop.  Fix by running through the range with dcbst.
+     ;*/
+LINE_LABEL(cache60xDisableStore)
+    DCBST   0 , R9                                  ;/*  store line if "modified"                        */
+    ADDI    R9 , R9 , PPC_CACHE_BLOCK_SIZE          ;/*  point to next cache line                        */
+    BDNZ    cache60xDisableStore                    ;/*  repeat for all sets and ways                    */
+
+    ;/* "store all" operation is complete */
+    CMPWI   R8 , PPC_CACHE_OP_STORE_ALL
+    BEQ     cache60xAllOpsDone
+
+LINE_LABEL(cache60xInvalidateD)
+    ;/* remaining cases must invalidate the cache */
+
+    ORI     R5 , R4 , ARCH_PPC_HID0_DCFI
+    RLWINM  R4 , R5 , 0 , ARCH_PPC_HID0_BIT_DCFI + 1 , ARCH_PPC_HID0_BIT_DCFI - 1
+
+    ;/* registers are now set to invalidate but leave enabled */
+    CMPWI   R8 , PPC_CACHE_OP_DISABLE
+    BNE     cache60xFlashInv
+
+    ;/* for "disable", second write to HID0 turns off both DCE and DCFI */
+    RLWINM  R4 , R4 , 0 , ARCH_PPC_HID0_BIT_DCE + 1 , ARCH_PPC_HID0_BIT_DCE - 1
+
+LINE_LABEL(cache60xFlashInv)
+#ifdef __SYLIXOS_PPC745X__
+    DSSALL
+#endif      /* __SYLIXOS_PPC745X__ */
+    SYNC                                            ;/*  Synchronize for invalidate                      */
+    MTSPR   HID0 , R5                               ;/*  Invalidate cache                                */
+#ifdef __SYLIXOS_PPC745X__
+    SYNC
+    ISYNC
+#endif      /* __SYLIXOS_PPC745X__ */
+    MTSPR   HID0 , R4                               ;/*  Turn off DCFI, retain or clear DCE              */
+    SYNC
+#ifdef __SYLIXOS_PPC745X__
+    ISYNC
+#endif      /* __SYLIXOS_PPC745X__ */
+
+LINE_LABEL(cache60xAllOpsDone)
+    B       cache60xRetOK                           ;/*  return OK                                       */
+
+;/*
+ ;* This label and branch must not precede the "MTSPR HID0 , R4"
+ ;* in cache60xFlashInv.
+ ;*/
+LINE_LABEL(cache60xDisableLoadItlb)
+    B       cache60xDisableLoadDtlb
+
     FUNC_END()
 
 ;/*********************************************************************************************************
-;  This API enables the branch predictor
+;  CACHE 操作返回成功
 ;*********************************************************************************************************/
 
-FUNC_DEF(bootArmBranchPredictionEnable)
-    ARM_DSB()
-    ARM_ISB()
-    MRC     p15, 0, R0, c1, c0, 0
-    ORR     R0, R0, #(1 << 11)
-    MCR     p15, 0, R0, c1, c0, 0
-    ARM_DSB()
-    ARM_ISB()
-    BX      LR
+FUNC_DEF(cache60xRetOK)
+    SYNC                                            ;/*  SYNC for good measure (multiprocessor?)         */
+    BLR
     FUNC_END()
 
 ;/*********************************************************************************************************
-;  This API disables the branch predictor
+;  I-CACHE 所有数据无效
 ;*********************************************************************************************************/
 
-FUNC_DEF(bootArmBranchPredictionDisable)
-    ARM_DSB()
-    ARM_ISB()
-    MRC     p15, 0, R0, c1, c0, 0
-    BIC     R0, R0, #(1 << 11)
-    MCR     p15, 0, R0, c1, c0, 0
-    ARM_DSB()
-    ARM_ISB()
-    BX      LR
+FUNC_DEF(ppc60xICacheInvalidateAll)
+    MFSPR   R4 , HID0
+
+    ;/* disable instruction cache */
+    RLWINM. R5 , R4 , 0 , ARCH_PPC_HID0_BIT_ICE , ARCH_PPC_HID0_BIT_ICE
+    BEQ     ICacheInvalidDone                       ;/*  return OK if cache already off                  */
+
+    ORI     R5 , R4 , ARCH_PPC_HID0_ICFI            ;/*  set the ICFI bit                                */
+    RLWINM  R4 , R4 , 0 , ARCH_PPC_HID0_BIT_ICFI + 1 , ARCH_PPC_HID0_BIT_ICFI - 1
+
+    ISYNC                                           ;/*  Synchronize for IC invalidate                   */
+    MTSPR   HID0 , R5                               ;/*  Invalidate Instr Cache                          */
+#if ((__SYLIXOS_PPC_CPU__ == __SYLIXOS_PPC603__) || (__SYLIXOS_PPC_CPU__ == __SYLIXOS_PPCEC603__))
+    MTSPR   HID0 , R4                               ;/*  using 2 consec instructions                     */
+#endif
+    ISYNC                                           ;/*  PPC603 recommendation                           */
+#if ((__SYLIXOS_PPC_CPU__ == __SYLIXOS_PPC604__) && !defined(__SYLIXOS_PPC745X__))
+    SYNC                                            ;/*  It makes no sense for sync to be
+                                                     ;*  needed here, and it is not required
+                                                     ;*  for 745x per the User's Manual, but
+                                                     ;*  isync alone does not seem to work
+                                                     ;*  properly on any of 604e, 750CX,
+                                                     ;*  750FX, 7400.  See also SPR 8976.
+                                                     ;*                                                  */
+#endif      /* __SYLIXOS_PPC604__ && !__SYLIXOS_PPC745X__ */
+
+LINE_LABEL(ICacheInvalidDone)
+    BLR
     FUNC_END()
+
+;/*********************************************************************************************************
+;  无效 ICACHE R3=void *start; R4=void *end; R5=cache line size
+;*********************************************************************************************************/
+
+FUNC_DEF(ppc60xICacheInvalidate)
+    ICBI    R0 , R3
+    ADD     R3 , R3 , R5
+    CMPLW   R3 , R4
+    BLT     ppc60xICacheInvalidate
+
+    ISYNC
+    SYNC                                            ;/*  SYNC for good measure (multiprocessor?)         */
+    BLR
+    FUNC_END()
+
+;/*********************************************************************************************************
+;  将指定虚拟地址的 DCACHE 无效  R3=void *start; R4=void *end; R5=cache line size
+;*********************************************************************************************************/
+
+FUNC_DEF(ppc60xDCacheInvalidate)
+#if (__SYLIXOS_PPC_CPU__ == __SYLIXOS_PPC603__)
+    DCBF    R0 , R3                                 ;/*  PPC603 User's Manual says "don't use dcbi"      */
+#else
+    DCBI    R0 , R3
+#endif
+    ADD     R3 , R3 , R5
+    CMPLW   R3 , R4
+    BLT     ppc60xDCacheInvalidate
+
+    SYNC                                            ;/*  XXX confirm needed XXX                          */
+    BLR
+    FUNC_END()
+
+;/*********************************************************************************************************
+;  将指定虚拟地址的 DCACHE 回写并无效  R3=void *start; R4=void *end; R5=cache line size
+;*********************************************************************************************************/
+
+FUNC_DEF(ppc60xDCacheClear)
+    DCBF    R0 , R3                                 ;/*  PPC "flush" == SylixOS "clear"                  */
+    ADD     R3 , R3 , R5
+    CMPLW   R3 , R4
+    BLT     ppc60xDCacheClear
+
+    SYNC
+    BLR
+    FUNC_END()
+
+;/*********************************************************************************************************
+;  将指定虚拟地址的 DCACHE 回写  R3=void *start; R4=void *end; R5=cache line size
+;*********************************************************************************************************/
+
+FUNC_DEF(ppc60xDCacheFlush)
+    DCBST   R0 , R3                                 ;/*  PPC "store" == SylixOS "flush"                  */
+    ADD     R3 , R3 , R5
+    CMPLW   R3 , R4
+    BLT     ppc60xDCacheFlush
+
+    SYNC                                            ;/*  Ensure all stores complete                      */
+    BLR
+    FUNC_END()
+
+;/*********************************************************************************************************
+;  禁能分支预测
+;*********************************************************************************************************/
+
+FUNC_DEF(ppc60xBranchPredictionDisable)
+    BLR
+    FUNC_END()
+
+;/*********************************************************************************************************
+;  使能分支预测
+;*********************************************************************************************************/
+
+FUNC_DEF(ppc60xBranchPredictionEnable)
+    BLR
+    FUNC_END()
+
+;/*********************************************************************************************************
+;  无效分支预测
+;*********************************************************************************************************/
+
+FUNC_DEF(ppc60xBranchPredictorInvalidate)
+    BLR
+    FUNC_END()
+
     FILE_END()
 
 ;/*********************************************************************************************************

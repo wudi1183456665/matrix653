@@ -36,16 +36,13 @@ LOCAL_SRCS := \
 matrix/boot/boot.S \
 matrix/boot/bootAsm.S \
 matrix/boot/bootMmu.c \
-matrix/boot/bootScu.c \
 matrix/startup.S \
 matrix/bspInit.c \
 matrix/bspLib.c \
 matrix/loadPartition.c \
-matrix/driver/gic/gic.c \
-matrix/driver/uart/uart.c \
-matrix/driver/timer/timer.c \
-matrix/driver/ccm_pll/ccm_pll.c \
-matrix/driver/cpu_utility/cpu_utility.c
+matrix/driver/uart/uart_1.c \
+matrix/driver/timer/ppcTimer.c \
+matrix/driver/int/i8259a.c
 
 #*********************************************************************************************************
 # Header file search path (eg. LOCAL_INC_PATH := -I"Your hearder files search path")

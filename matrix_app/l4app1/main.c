@@ -51,17 +51,21 @@ VOID  context_switch(PARCH_USER_CTX  puctxSP);
 VOID  l_main (VOID)
 {
     //INT    i = 10;
-    ARCH_REG_T  uiCpsr;
+    ARCH_REG_T  uiMsr;
 
     _G_uiThreadCur = 0;
     _G_uiTick      = 0;
 
-    uiCpsr  = 0; //archGetCpsr();                                            /*  获得当前 CPSR 寄存器        */
-    uiCpsr &= ~ARCH_ARM_MASKMODE;
-    uiCpsr |=  ARCH_ARM_USR32MODE;                                      /*  USR 模式                    */
-    uiCpsr &= ~ARCH_ARM_DIS_IRQ;                                        /*  使能 IRQ                    */
 
-    _G_uctxThread[1].UCTX_uiCpsr = uiCpsr;
+#define ARCH_PPC_MSR_VEC			0x02000000							/*  Bit 6 of MSR				*/
+    uiMsr  = 0; //archGetCpsr();                                            /*  获得当前 CPSR 寄存器        */
+    uiMsr |=  ARCH_PPC_MSR_EE;                                 		    /*  使能中断                    */
+    uiMsr &= ~ARCH_PPC_MSR_PR;                                      	/*  特权模式                    */
+    uiMsr &= ~ARCH_PPC_MSR_FP;                				            /*  禁能 FPU                    */
+    //uiMsr &= ~ARCH_PPC_MSR_VEC;                                     	/*  禁能 ALTIVEC                */
+
+
+    _G_uctxThread[1].UCTX_uiSrr1 = uiMsr;                        /*Msr寄存器*/
     _G_uctxThread[1].UCTX_uiR0   = 0x00000000;
     _G_uctxThread[1].UCTX_uiR1   = 0x01010101;
     _G_uctxThread[1].UCTX_uiR2   = 0x02020202;
@@ -75,7 +79,7 @@ VOID  l_main (VOID)
     _G_uctxThread[1].UCTX_uiR10  = 0x10101010;
     _G_uctxThread[1].UCTX_uiR11  = 0x00000000;
     _G_uctxThread[1].UCTX_uiR12  = 0x12121212;
-    _G_uctxThread[1].UCTX_uiSp   = (ARCH_REG_T)&_G_uiStack[1023];
+    _G_uctxThread[1].UCTX_uiR1   = (ARCH_REG_T)&_G_uiStack[1023];  /*SP指针*/
     _G_uctxThread[1].UCTX_uiR14  = (ARCH_REG_T)thread1;
     _G_uctxThread[1].UCTX_uiR15  = (ARCH_REG_T)thread1;
 
@@ -141,7 +145,7 @@ VOID  delayMs (ULONG  ulMs)
 }
 VOID  uctxCopy (PARCH_USER_CTX  puctxDst, PARCH_USER_CTX  puctxSrc)
 {
-    puctxDst->UCTX_uiCpsr = puctxSrc->UCTX_uiCpsr;
+    puctxDst->UCTX_uiSrr1 = puctxSrc->UCTX_uiSrr1;        /*Msr寄存器*/
     puctxDst->UCTX_uiR0   = puctxSrc->UCTX_uiR0;
     puctxDst->UCTX_uiR1   = puctxSrc->UCTX_uiR1;
     puctxDst->UCTX_uiR2   = puctxSrc->UCTX_uiR2;
@@ -155,7 +159,7 @@ VOID  uctxCopy (PARCH_USER_CTX  puctxDst, PARCH_USER_CTX  puctxSrc)
     puctxDst->UCTX_uiR10  = puctxSrc->UCTX_uiR10;
     puctxDst->UCTX_uiR11  = puctxSrc->UCTX_uiR11;
     puctxDst->UCTX_uiR12  = puctxSrc->UCTX_uiR12;
-    puctxDst->UCTX_uiSp   = puctxSrc->UCTX_uiSp;
+    puctxDst->UCTX_uiR1   = puctxSrc->UCTX_uiR1;
     puctxDst->UCTX_uiR14  = puctxSrc->UCTX_uiR14;
     puctxDst->UCTX_uiR15  = puctxSrc->UCTX_uiR15;
 }

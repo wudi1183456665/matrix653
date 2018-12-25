@@ -22,6 +22,7 @@
 #ifndef __PPC_SUPPORT_H
 #define __PPC_SUPPORT_H
 
+#include "mm/ppcMmu.h"
 
 
 //#if defined(MX_CFG_CPU_ARCH_PPC)
@@ -97,7 +98,7 @@ VOID			archSpinNotify(VOID);
 INT				archSpinLock(spinlock_t  *psl);
 INT 			archSpinTryLock(spinlock_t  *psl);
 INT				archSpinUnlock(spinlock_t  *psl);
-ULONG			archMpCur(VOID);
+//ULONG			archMpCur(VOID);
 VOID			archMpInt(ULONG  ulCPUId);
 /*********************************************************************************************************
   ppc 内存屏障
@@ -118,7 +119,7 @@ VOID			archMpInt(ULONG  ulCPUId);
 VOID			bspIntHandle(PARCH_USER_CTX  puctxSP);
 VOID			bspIntVectorEnable(ULONG   ulVector);
 VOID			bspIntVectorDisable(ULONG  ulVector);
-VOID			bspIntVectorIsEnable(ULONG ulVector);
+BOOL			bspIntVectorIsEnable(ULONG ulVector);
 /*********************************************************************************************************
   CPU 定时器时钟
 *********************************************************************************************************/
@@ -150,7 +151,7 @@ VOID            bspCpuIpiVectorInstall(VOID);                           /*  安装
 /*********************************************************************************************************
   信息打印（打印信息不可依赖任何 api）
 *********************************************************************************************************/
-VOID            bspDebugMsg(CPCHAR  pcFormat, ...);
+VOID            bspDebugMsg(UCHAR  ucCurr, ...);
 
 /*********************************************************************************************************
   PPC 处理器获取 MSR 寄存器的值。
